@@ -1,0 +1,66 @@
+.servings-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24rpx;
+}
+
+.servings-input {
+  width: 120rpx;
+  text-align: center;
+  padding: 16rpx;
+  border: 2rpx solid var(--border);
+  border-radius: 8rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+}
+
+.ingredients-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ingredient-edit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background: var(--bg-secondary);
+  border-radius: 12rpx;
+}
+
+.ingredient-name {
+  font-size: 30rpx;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.grams-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.grams-input {
+  width: 140rpx;
+  text-align: right;
+  padding: 12rpx 16rpx;
+  border: 2rpx solid var(--border);
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.grams-unit {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  min-width: 30rpx;
+}
+
+.bottom-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 48rpx;
+}

@@ -1,0 +1,38 @@
+app:
+  name: "recipe-ai-backend"
+  env: "development"
+  port: 8080
+
+database:
+  host: "localhost"
+  port: 5432
+  user: "recipe"
+  password: "recipe123"
+  dbname: "recipe_ai"
+  sslmode: "disable"
+  max_conns: 20
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+
+ai:
+  api_key: "your-api-key"
+  base_url: "https://api.openai.com/v1"
+  model: "gpt-4o"
+  max_tokens: 4096
+  temperature: 0.2
+
+bilibili:
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+  cookie: ""
+  timeout: 15
+
+worker:
+  concurrency: 3
+  retry: 2
+
+rate_limit:
+  ip_limit_per_minute: 10
+  video_limit_per_minute: 1

@@ -1,0 +1,76 @@
+<view class="container">
+  <!-- 头部区域 -->
+  <view class="header">
+    <view class="header-icon">🍳</view>
+    <view class="header-title">AI菜谱解析助手</view>
+    <view class="header-subtitle">粘贴B站做菜视频链接，AI自动解析菜谱与热量</view>
+  </view>
+
+  <!-- 输入卡片 -->
+  <view class="card input-card">
+    <view class="card-title">
+      <text class="icon">🔗</text>
+      <text>B站视频链接</text>
+    </view>
+
+    <view class="input-wrapper">
+      <textarea
+        class="input url-input"
+        placeholder="请粘贴B站视频链接，如：https://www.bilibili.com/video/BVxxxx"
+        value="{{videoUrl}}"
+        bindinput="onInputChange"
+        maxlength="500"
+        auto-height
+      />
+      <view wx:if="{{videoUrl}}" class="clear-btn" bindtap="clearUrl">
+        <text>✕</text>
+      </view>
+    </view>
+
+    <view class="input-actions">
+      <view class="btn btn-secondary btn-sm" bindtap="pasteUrl">
+        <text>📋 粘贴</text>
+      </view>
+    </view>
+
+    <button
+      class="btn btn-primary submit-btn {{loading ? 'loading' : ''}}"
+      bindtap="submitAnalyze"
+      disabled="{{loading || !videoUrl}}"
+    >
+      <text wx:if="{{!loading}}">🚀 开始解析</text>
+      <text wx:else>解析中...</text>
+    </button>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="card tips-card">
+    <view class="card-title">
+      <text class="icon">💡</text>
+      <text>使用说明</text>
+    </view>
+    <view class="tips-list">
+      <view class="tip-item">
+        <text class="tip-num">1</text>
+        <text class="tip-text">支持B站视频链接、b23.tv短链或直接输入BV号</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-num">2</text>
+        <text class="tip-text">优先使用视频字幕解析，无字幕时使用简介和评论</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-num">3</text>
+        <text class="tip-text">AI会自动提取材料、步骤并估算热量与营养素</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-num">4</text>
+        <text class="tip-text">解析结果支持修改材料用量并重新计算热量</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 免责声明 -->
+  <view class="disclaimer">
+    <text>⚠️ 热量数据为估算值，仅供参考。不提供医疗或减脂诊断建议。</text>
+  </view>
+</view>

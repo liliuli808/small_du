@@ -1,0 +1,136 @@
+.task-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48rpx;
+}
+
+.loading-section {
+  text-align: center;
+}
+
+.loading-animation {
+  margin-bottom: 40rpx;
+}
+
+.loading-ring {
+  width: 120rpx;
+  height: 120rpx;
+  border: 8rpx solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+}
+
+.loading-subtitle {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-bottom: 48rpx;
+}
+
+.progress-steps {
+  display: flex;
+  justify-content: center;
+  gap: 32rpx;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+
+.step.active {
+  opacity: 1;
+}
+
+.step-dot {
+  width: 20rpx;
+  height: 20rpx;
+  background: var(--border);
+  border-radius: 50%;
+}
+
+.step.active .step-dot {
+  background: var(--primary);
+  box-shadow: 0 0 8rpx rgba(255, 107, 53, 0.4);
+}
+
+.step-label {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+.step.active .step-label {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* 错误状态 */
+.error-section {
+  text-align: center;
+  padding: 48rpx;
+}
+
+.error-icon {
+  font-size: 80rpx;
+  margin-bottom: 24rpx;
+}
+
+.error-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+}
+
+.error-message {
+  font-size: 28rpx;
+  color: var(--error);
+  margin-bottom: 40rpx;
+  padding: 24rpx;
+  background: #fee2e2;
+  border-radius: 12rpx;
+}
+
+.error-tips {
+  text-align: left;
+  background: var(--bg-secondary);
+  padding: 32rpx;
+  border-radius: 12rpx;
+  margin-bottom: 40rpx;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.tip {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}

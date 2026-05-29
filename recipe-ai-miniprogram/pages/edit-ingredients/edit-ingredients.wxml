@@ -1,0 +1,47 @@
+<view class="container">
+  <!-- 份数调整 -->
+  <view class="card">
+    <view class="card-title">
+      <text class="icon">🍽</text>
+      <text>份数</text>
+    </view>
+    <view class="servings-control">
+      <button class="btn btn-sm btn-secondary" bindtap="onServingsChange" data-servings="{{servings - 1}}">-</button>
+      <input class="servings-input" type="number" value="{{servings}}" bindblur="onServingsChange" />
+      <button class="btn btn-sm btn-secondary" bindtap="onServingsChange" data-servings="{{servings + 1}}">+</button>
+    </view>
+  </view>
+
+  <!-- 材料调整 -->
+  <view class="card">
+    <view class="card-title flex-between">
+      <view class="flex-center gap-8">
+        <text class="icon">🥬</text>
+        <text>材料用量</text>
+      </view>
+      <view class="btn btn-sm btn-secondary" bindtap="resetToOriginal">重置</view>
+    </view>
+
+    <view class="ingredients-edit-list">
+      <view wx:for="{{ingredients}}" wx:key="index" class="ingredient-edit-item">
+        <text class="ingredient-name">{{item.name}}</text>
+        <view class="grams-input-wrapper">
+          <input
+            class="grams-input"
+            type="digit"
+            value="{{item.grams}}"
+            data-index="{{index}}"
+            bindblur="onGramsChange"
+          />
+          <text class="grams-unit">g</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="bottom-actions">
+    <view class="btn btn-primary" bindtap="submitRecalculate">重新计算热量</view>
+    <view class="btn btn-secondary" bindtap="goBack">取消</view>
+  </view>
+</view>

@@ -1,0 +1,54 @@
+<view class="container task-container">
+  <!-- 加载中状态 -->
+  <view wx:if="{{status === 'pending' || status === 'processing'}}">
+    <view class="loading-section">
+      <view class="loading-animation">
+        <view class="loading-ring"></view>
+      </view>
+
+      <view class="loading-title">{{message}}</view>
+      <view class="loading-subtitle">已用时 {{elapsedTime}} 秒</view>
+
+      <view class="progress-steps">
+        <view class="step {{elapsedTime >= 2 ? 'active' : ''}}">
+          <view class="step-dot"></view>
+          <view class="step-label">解析链接</view>
+        </view>
+        <view class="step {{elapsedTime >= 4 ? 'active' : ''}}">
+          <view class="step-dot"></view>
+          <view class="step-label">获取信息</view>
+        </view>
+        <view class="step {{elapsedTime >= 6 ? 'active' : ''}}">
+          <view class="step-dot"></view>
+          <view class="step-label">AI解析</view>
+        </view>
+        <view class="step {{elapsedTime >= 10 ? 'active' : ''}}">
+          <view class="step-dot"></view>
+          <view class="step-label">计算热量</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 失败状态 -->
+  <view wx:if="{{status === 'failed' || status === 'timeout'}}">
+    <view class="error-section">
+      <view class="error-icon">😞</view>
+      <view class="error-title">解析失败</view>
+      <view class="error-message">{{errorMsg || message}}</view>
+
+      <view class="error-tips">
+        <view class="tips-title">可能的原因：</view>
+        <view class="tip">• 视频没有字幕、简介或可用评论</view>
+        <view class="tip">• 该视频不是做菜类视频</view>
+        <view class="tip">• B站接口暂时不可用</view>
+        <view class="tip">• 网络连接超时</view>
+      </view>
+
+      <view class="error-actions">
+        <view class="btn btn-primary" bindtap="retry">重新尝试</view>
+        <view class="btn btn-secondary" bindtap="goBack">返回首页</view>
+      </view>
+    </view>
+  </view>
+</view>

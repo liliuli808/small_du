@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: recipe_postgres
+    environment:
+      POSTGRES_USER: recipe
+      POSTGRES_PASSWORD: recipe123
+      POSTGRES_DB: recipe_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipe -d recipe_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: recipe_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      target: api
+    container_name: recipe_api
+    ports:
+      - "8080:8080"
+    environment:
+      CONFIG_PATH: /app/config/config.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: .
+      target: worker
+    container_name: recipe_worker
+    environment:
+      CONFIG_PATH: /app/config/config.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./config/config.yaml:/app/config/config.yaml
+    restart: unless-stopped
+    deploy:
+      replicas: 2
+
+volumes:
+  postgres_data:
+  redis_data:

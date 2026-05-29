@@ -1,0 +1,33 @@
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+vendor/
+
+# Config (with secrets)
+recipe-ai-backend/config/config.yaml
+recipe-ai-backend/config/config.prod.yaml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Miniprogram
+recipe-ai-miniprogram/node_modules/
+recipe-ai-miniprogram/miniprogram_npm/
+
+# Docker volumes
+data/
+postgres_data/
+redis_data/

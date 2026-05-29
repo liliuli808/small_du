@@ -1,0 +1,328 @@
+.loading-container, .error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 24rpx;
+  color: var(--text-secondary);
+}
+
+.error-icon {
+  font-size: 80rpx;
+}
+
+/* 视频卡片 */
+.video-card {
+  padding: 28rpx 32rpx;
+}
+
+.video-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 12rpx;
+}
+
+.video-meta {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 16rpx;
+}
+
+.meta-item {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.source-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 12rpx;
+}
+
+.warning-text {
+  font-size: 24rpx;
+  color: var(--warning);
+  background: #fef3c7;
+  padding: 16rpx;
+  border-radius: 8rpx;
+}
+
+/* 菜名 */
+.dish-header {
+  text-align: center;
+  padding: 32rpx;
+}
+
+.dish-name {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.dish-servings {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+}
+
+.uncertain-banner {
+  margin-top: 20rpx;
+  padding: 16rpx 20rpx;
+  background: #fef3c7;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: var(--warning);
+  text-align: left;
+}
+
+/* 热量概览 */
+.nutrition-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16rpx;
+}
+
+.nutrition-item {
+  text-align: center;
+  padding: 20rpx;
+  background: var(--bg-secondary);
+  border-radius: 12rpx;
+}
+
+.nutrition-item.total {
+  grid-column: span 1;
+  background: var(--primary-light);
+}
+
+.nutrition-item.per-serving {
+  grid-column: span 1;
+  background: #dbeafe;
+}
+
+.nutrition-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4rpx;
+}
+
+.nutrition-value.protein {
+  color: #10b981;
+}
+
+.nutrition-value.fat {
+  color: #f59e0b;
+}
+
+.nutrition-value.carbs {
+  color: #3b82f6;
+}
+
+.nutrition-label {
+  font-size: 22rpx;
+  color: var(--text-secondary);
+}
+
+.nutrition-disclaimer {
+  margin-top: 20rpx;
+  padding: 16rpx;
+  background: #f8f9fa;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  color: var(--text-tertiary);
+}
+
+/* 材料清单 */
+.ingredients-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.ingredient-item {
+  padding: 20rpx;
+  background: var(--bg-secondary);
+  border-radius: 12rpx;
+}
+
+.ingredient-main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8rpx;
+}
+
+.ingredient-name {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ingredient-grams {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.ingredient-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.ingredient-original {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+.ingredient-meta {
+  display: flex;
+  gap: 16rpx;
+  font-size: 22rpx;
+}
+
+.confidence.high {
+  color: var(--success);
+}
+
+.confidence.medium {
+  color: var(--warning);
+}
+
+.confidence.low {
+  color: var(--error);
+}
+
+/* 热量明细 */
+.nutrition-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.nutrition-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 20rpx;
+  background: var(--bg-secondary);
+  border-radius: 8rpx;
+}
+
+.nutrition-detail-item.unmatched {
+  opacity: 0.6;
+}
+
+.detail-name {
+  font-size: 28rpx;
+  color: var(--text-primary);
+}
+
+.detail-value {
+  text-align: right;
+}
+
+.detail-value text {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.detail-sub {
+  font-size: 22rpx !important;
+  font-weight: 400 !important;
+  color: var(--text-secondary) !important;
+}
+
+.unmatched-text {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+}
+
+/* 步骤 */
+.steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.step-item {
+  display: flex;
+  gap: 20rpx;
+}
+
+.step-number {
+  width: 48rpx;
+  height: 48rpx;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8rpx;
+}
+
+.step-desc {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8rpx;
+}
+
+.step-meta {
+  font-size: 22rpx;
+  color: var(--text-tertiary);
+  margin-bottom: 8rpx;
+}
+
+.step-techniques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.technique-tag {
+  padding: 6rpx 16rpx;
+  background: #e0f2fe;
+  color: #0369a1;
+  border-radius: 6rpx;
+  font-size: 22rpx;
+}
+
+/* 技巧 */
+.tips-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.tip-text {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* 底部 */
+.bottom-actions {
+  padding: 32rpx;
+  margin-bottom: 48rpx;
+}

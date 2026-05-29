@@ -1,0 +1,15 @@
+DROP TABLE IF EXISTS recipe_nutrition_results;
+DROP TABLE IF EXISTS recipes;
+DROP TABLE IF EXISTS video_text_sources;
+DROP TABLE IF EXISTS bilibili_videos;
+DROP TABLE IF EXISTS analyze_tasks;
+DROP INDEX IF EXISTS idx_analyze_tasks_task_id;
+DROP INDEX IF EXISTS idx_analyze_tasks_status;
+DROP INDEX IF EXISTS idx_bilibili_videos_bvid;
+DROP INDEX IF EXISTS idx_bilibili_videos_aid;
+DROP INDEX IF EXISTS idx_video_text_sources_video_id;
+DROP INDEX IF EXISTS idx_video_text_sources_source_type;
+DROP INDEX IF EXISTS idx_recipes_video_id;
+DROP INDEX IF EXISTS idx_recipes_dish_name;
+DROP INDEX IF EXISTS idx_nutrition_foods_canonical_name;
+DROP INDEX IF EXISTS idx_recipe_nutrition_results_recipe_id;
