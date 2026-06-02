@@ -94,10 +94,12 @@ func (s *AnalyzeService) Process(ctx context.Context, taskID, rawURL string) err
 	// Step 3: 获取字幕
 	s.taskService.UpdateProgress(ctx, taskID, "正在获取字幕")
 	subtitleText, hasSubtitle := s.bilibiliService.TryGetSubtitle(ctx, videoInfo)
+	logger.Info("字幕获取结果", logger.String("task_id", taskID), logger.Int("len", len(subtitleText)), logger.Bool("has_subtitle", hasSubtitle))
 
 	// Step 4: 获取评论
 	s.taskService.UpdateProgress(ctx, taskID, "正在读取简介和评论")
 	comments, _ := s.bilibiliService.GetRecipeLikeComments(ctx, videoInfo.AID, 5)
+	logger.Info("文本源统计", logger.String("task_id", taskID), logger.Int("desc_len", len(videoInfo.Description)), logger.Int("comments", len(comments)))
 
 	bundle := TextSourceBundle{
 		Title:       videoInfo.Title,

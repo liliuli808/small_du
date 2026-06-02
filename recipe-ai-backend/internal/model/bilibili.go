@@ -5,13 +5,13 @@ import "time"
 // BilibiliVideo B站视频表
 type BilibiliVideo struct {
 	ID              int64     `gorm:"primaryKey;autoIncrement" json:"id"`
-	BVID            string    `gorm:"type:varchar(64);uniqueIndex" json:"bvid"`
-	AID             int64     `json:"aid"`
-	CID             int64     `json:"cid"`
-	Title           string    `gorm:"type:text" json:"title"`
-	Description     string    `gorm:"type:text" json:"description"`
-	OwnerName       string    `gorm:"type:varchar(255)" json:"owner_name"`
-	DurationSeconds int       `json:"duration_seconds"`
+	BVID            string    `gorm:"column:bvid;type:varchar(64);uniqueIndex" json:"bvid"`
+	AID             int64     `gorm:"column:aid" json:"aid"`
+	CID             int64     `gorm:"column:cid" json:"cid"`
+	Title           string    `gorm:"column:title;type:text" json:"title"`
+	Description     string    `gorm:"column:description;type:text" json:"description"`
+	OwnerName       string    `gorm:"column:owner_name;type:varchar(255)" json:"owner_name"`
+	DurationSeconds int       `gorm:"column:duration_seconds" json:"duration_seconds"`
 	CreatedAt       time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }

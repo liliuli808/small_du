@@ -84,6 +84,12 @@ func (c *BilibiliClient) GetVideoInfo(ctx context.Context, bvid string) (*model.
 		return nil, fmt.Errorf("B站API错误: code=%d, msg=%s", result.Code, result.Message)
 	}
 
+	logger.Info("view接口响应",
+		logger.String("bvid", result.Data.BVID),
+		logger.Int64("aid", result.Data.AID),
+		logger.Int("pages", len(result.Data.Pages)),
+		logger.Int("subtitle_list", len(result.Data.Subtitle.List)))
+
 	info := &model.VideoInfo{
 		AID:         result.Data.AID,
 		BVID:        result.Data.BVID,
@@ -136,8 +142,20 @@ func (c *BilibiliClient) TryGetSubtitle(ctx context.Context, videoInfo *model.Vi
 		return "", false
 	}
 
+	// 优先使用 view 接口返回的 URL；如果为空（新版 B 站 API 行为），
+	// 降级到 /x/player/wbi/v2 拿真实 subtitle_url
+	subtitleURL := subtitle.SubtitleURL
+	if subtitleURL == "" {
+		resolved, err := c.resolveSubtitleURLFromWbiV2(ctx, videoInfo, subtitle.Lan)
+		if err != nil {
+			logger.ErrorLog("从 wbi/v2 解析字幕 URL 失败", logger.Error(err), logger.String("lan", subtitle.Lan))
+		} else {
+			subtitleURL = resolved
+		}
+	}
+
 	// 获取字幕内容
-	text, err := c.fetchSubtitleContent(ctx, subtitle.SubtitleURL)
+	text, err := c.fetchSubtitleContent(ctx, subtitleURL)
 	if err != nil {
 		logger.ErrorLog("获取字幕内容失败", logger.Error(err))
 		return "", false
@@ -194,6 +212,51 @@ func (c *BilibiliClient) selectBestSubtitle(subtitles []model.SubtitleMeta) *mod
 
 	best := scored[0].meta
 	return &best
+}
+
+// resolveSubtitleURLFromWbiV2 当 view 接口返回的 subtitle_url 为空时,
+// 调 /x/player/wbi/v2 拿该语言的真实字幕 URL
+func (c *BilibiliClient) resolveSubtitleURLFromWbiV2(ctx context.Context, videoInfo *model.VideoInfo, lan string) (string, error) {
+	if videoInfo.AID == 0 || videoInfo.BVID == "" || videoInfo.CID == 0 {
+		return "", fmt.Errorf("缺少必要参数: aid=%d bvid=%s cid=%d", videoInfo.AID, videoInfo.BVID, videoInfo.CID)
+	}
+
+	apiURL := fmt.Sprintf("%s/x/player/wbi/v2?bvid=%s&cid=%d", c.baseURL, videoInfo.BVID, videoInfo.CID)
+
+	resp, err := c.httpClient.Get(ctx, apiURL)
+	if err != nil {
+		return "", fmt.Errorf("请求 wbi/v2 失败: %w", err)
+	}
+	defer resp.Body.Close()
+
+	var result struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+		Data    struct {
+			Subtitle struct {
+				Subtitles []struct {
+					Lan         string `json:"lan"`
+					SubtitleURL string `json:"subtitle_url"`
+				} `json:"subtitles"`
+			} `json:"subtitle"`
+		} `json:"data"`
+	}
+
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return "", fmt.Errorf("解析 wbi/v2 响应失败: %w", err)
+	}
+
+	if result.Code != 0 {
+		return "", fmt.Errorf("wbi/v2 错误: code=%d msg=%s", result.Code, result.Message)
+	}
+
+	for _, s := range result.Data.Subtitle.Subtitles {
+		if s.Lan == lan && s.SubtitleURL != "" {
+			return s.SubtitleURL, nil
+		}
+	}
+
+	return "", fmt.Errorf("wbi/v2 中未找到 lan=%s 的字幕", lan)
 }
 
 // fetchSubtitleContent 获取字幕内容

@@ -51,6 +51,11 @@ func Float64(key string, val float64) zap.Field {
 	return zap.Float64(key, val)
 }
 
+// Bool 布尔字段
+func Bool(key string, val bool) zap.Field {
+	return zap.Bool(key, val)
+}
+
 // Info 信息日志
 func Info(msg string, fields ...zap.Field) {
 	if Logger != nil {

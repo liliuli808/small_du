@@ -1,6 +1,8 @@
 package model
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"time"
 )
 
@@ -65,3 +67,27 @@ type IngredientNutritionItem struct {
 
 // StringArray 字符串数组类型
 type StringArray []string
+
+// Value 写入数据库
+func (s StringArray) Value() (driver.Value, error) {
+	if s == nil {
+		return nil, nil
+	}
+	return json.Marshal(s)
+}
+
+// Scan 从数据库读取
+func (s *StringArray) Scan(value interface{}) error {
+	if value == nil {
+		*s = nil
+		return nil
+	}
+	switch v := value.(type) {
+	case []byte:
+		return json.Unmarshal(v, s)
+	case string:
+		return json.Unmarshal([]byte(v), s)
+	default:
+		return nil
+	}
+}
