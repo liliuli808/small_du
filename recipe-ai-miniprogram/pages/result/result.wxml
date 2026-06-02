@@ -1,100 +1,117 @@
-<view class="container">
+<view class="container result-container">
   <!-- 加载中 -->
   <view wx:if="{{loading}}" class="loading-container">
-    <view class="loading-spinner"></view>
-    <text>正在加载菜谱...</text>
+    <view class="loading-spinner-large"></view>
+    <text class="loading-text">正在加载菜谱...</text>
   </view>
 
   <!-- 错误 -->
   <view wx:if="{{error}}" class="error-container">
-    <view class="error-icon">😞</view>
-    <text>{{error}}</text>
+    <view class="error-circle">😞</view>
+    <text class="error-text">{{error}}</text>
     <view class="btn btn-primary" bindtap="goBack">返回首页</view>
   </view>
 
   <!-- 结果内容 -->
   <block wx:if="{{!loading && !error}}">
-    <!-- 视频信息区 -->
-    <view class="card video-card">
-      <view class="video-title">{{video.title}}</view>
-      <view class="video-meta">
-        <text class="meta-item">👤 {{video.owner_name || '未知UP主'}}</text>
-        <text class="meta-item">📺 B站</text>
+    <!-- 视频信息卡片 -->
+    <view class="video-info-card">
+      <view class="video-thumb">
+        <text class="video-thumb-icon">🎬</text>
       </view>
-      <view class="source-tags">
-        <view wx:for="{{textSources.source_types}}" wx:key="*this" class="tag tag-primary">
-          {{item === 'subtitle' ? '字幕' : item === 'description' ? '简介' : item === 'top_comment' ? '置顶评论' : '高赞评论'}}
+      <view class="video-info">
+        <view class="video-title">{{video.title || '未知视频'}}</view>
+        <view class="video-meta-row">
+          <view class="video-meta-item">
+            <text class="meta-icon">👤</text>
+            <text>{{video.owner_name || '未知UP主'}}</text>
+          </view>
+          <view class="video-meta-item">
+            <text class="meta-icon">⏱</text>
+            <text>{{formatTime(video.duration)}}</text>
+          </view>
+        </view>
+        <view class="source-tags-row">
+          <view wx:for="{{textSources.source_types}}" wx:key="*this" class="source-tag">
+            {{item === 'subtitle' ? '字幕' : item === 'description' ? '简介' : item === 'top_comment' ? '置顶评论' : '高赞评论'}}
+          </view>
         </view>
       </view>
-      <view wx:if="{{!textSources.has_subtitle}}" class="warning-text">
-        ⚠️ 未找到可用字幕，已根据视频简介和评论生成菜谱，结果可能不完整。
+    </view>
+
+    <!-- 菜谱标题区 -->
+    <view class="dish-header-card">
+      <view class="dish-name">{{recipe.dish_name || '未命名菜谱'}}</view>
+      <view class="dish-meta">
+        <view class="servings-badge">
+          <text class="servings-icon">🍽</text>
+          <text>约 {{recipe.servings || 1}} 人份</text>
+        </view>
+        <view wx:if="{{recipe.uncertain_items && recipe.uncertain_items.length > 0}}" class="uncertain-badge">
+          <text>⚠️ 部分食材不确定</text>
+        </view>
       </view>
     </view>
 
-    <!-- 菜名和份数 -->
-    <view class="card dish-header">
-      <view class="dish-name">{{recipe.dish_name}}</view>
-      <view class="dish-servings">约 {{recipe.servings || 1}} 人份</view>
-      <view wx:if="{{recipe.uncertain_items && recipe.uncertain_items.length > 0}}" class="uncertain-banner">
-        <text wx:for="{{recipe.uncertain_items}}" wx:key="*this">⚠️ {{item}}
-</text>
-      </view>
-    </view>
-
-    <!-- 热量概览 -->
-    <view class="card nutrition-card">
-      <view class="card-title">
-        <text class="icon">🔥</text>
-        <text>热量分析</text>
+    <!-- 营养概览卡片 -->
+    <view class="nutrition-overview-card">
+      <view class="nutrition-overview-title">
+        <text class="overview-icon">🔥</text>
+        <text>营养概览</text>
       </view>
       <view class="nutrition-grid">
-        <view class="nutrition-item total">
-          <view class="nutrition-value">{{nutrition.total_kcal || 0}}</view>
-          <view class="nutrition-label">整道菜 kcal</view>
+        <view class="nutrition-cell total">
+          <view class="nutrition-cell-value">{{nutrition.total_kcal || 0}}</view>
+          <view class="nutrition-cell-label">整道菜 kcal</view>
         </view>
-        <view class="nutrition-item per-serving">
-          <view class="nutrition-value">{{nutrition.kcal_per_serving || 0}}</view>
-          <view class="nutrition-label">每份 kcal</view>
+        <view class="nutrition-cell per">
+          <view class="nutrition-cell-value">{{nutrition.kcal_per_serving || 0}}</view>
+          <view class="nutrition-cell-label">每份 kcal</view>
         </view>
-        <view class="nutrition-item">
-          <view class="nutrition-value protein">{{nutrition.total_protein || 0}}g</view>
-          <view class="nutrition-label">蛋白质</view>
+        <view class="nutrition-cell">
+          <view class="nutrition-cell-value protein">{{nutrition.total_protein || 0}}g</view>
+          <view class="nutrition-cell-label">蛋白质</view>
         </view>
-        <view class="nutrition-item">
-          <view class="nutrition-value fat">{{nutrition.total_fat || 0}}g</view>
-          <view class="nutrition-label">脂肪</view>
+        <view class="nutrition-cell">
+          <view class="nutrition-cell-value fat">{{nutrition.total_fat || 0}}g</view>
+          <view class="nutrition-cell-label">脂肪</view>
         </view>
-        <view class="nutrition-item">
-          <view class="nutrition-value carbs">{{nutrition.total_carbs || 0}}g</view>
-          <view class="nutrition-label">碳水</view>
+        <view class="nutrition-cell">
+          <view class="nutrition-cell-value carbs">{{nutrition.total_carbs || 0}}g</view>
+          <view class="nutrition-cell-label">碳水</view>
         </view>
       </view>
-      <view class="nutrition-disclaimer">
-        ⚠️ 该结果为估算值，实际热量会受用油量、食材品牌和烹饪损耗影响。
+      <view class="nutrition-hint">
+        <text>⚠️ 该结果为估算值，实际热量会受用油量、食材品牌和烹饪损耗影响</text>
       </view>
     </view>
 
-    <!-- 材料清单 -->
-    <view class="card ingredients-card">
-      <view class="card-title flex-between">
+    <!-- 食材清单 -->
+    <view class="ingredients-section">
+      <view class="section-header flex-between">
         <view class="flex-center gap-8">
-          <text class="icon">🥬</text>
-          <text>材料清单</text>
+          <text class="section-icon">🥬</text>
+          <text class="section-title">食材清单</text>
+          <view class="servings-tag">{{recipe.servings || 1}}人份</view>
         </view>
-        <view class="btn btn-secondary btn-sm" bindtap="goEditIngredients">✏️ 修改用量</view>
+        <view class="btn btn-primary btn-xs" bindtap="goEditIngredients">⚖️ 调整份量</view>
       </view>
+
       <view class="ingredients-list">
-        <view wx:for="{{recipe.ingredients}}" wx:key="index" class="ingredient-item">
-          <view class="ingredient-main">
-            <text class="ingredient-name">{{item.name}}</text>
-            <text class="ingredient-grams">{{item.grams}}g</text>
+        <view wx:for="{{recipe.ingredients}}" wx:key="index" class="ingredient-row">
+          <view class="ingredient-check">
+            <view class="check-circle"></view>
           </view>
-          <view class="ingredient-detail">
-            <text class="ingredient-original">原文：{{item.source_text || item.amount + item.unit}}</text>
-            <view class="ingredient-meta">
-              <text class="source">来源：{{item.source === 'subtitle' ? '字幕' : item.source === 'description' ? '简介' : item.source === 'top_comment' ? '置顶评论' : '评论'}}</text>
-              <view class="confidence {{item.confidence >= 0.8 ? 'high' : item.confidence >= 0.5 ? 'medium' : 'low'}}">
-                {{item.confidence >= 0.8 ? '置信度：高' : item.confidence >= 0.5 ? '置信度：中' : '置信度：低'}}
+          <view class="ingredient-body">
+            <view class="ingredient-top">
+              <text class="ingredient-name">{{item.name}}</text>
+              <text class="ingredient-grams">{{item.grams}}g</text>
+            </view>
+            <view class="ingredient-bottom">
+              <text class="ingredient-source">{{item.source_text || item.amount + item.unit}}</text>
+              <view class="confidence-badge {{formatConfidence(item.confidence).class}}">
+                <view class="confidence-dot {{formatConfidence(item.confidence).class}}"></view>
+                <text>{{formatConfidence(item.confidence).text}}</text>
               </view>
             </view>
           </view>
@@ -103,42 +120,48 @@
     </view>
 
     <!-- 热量明细 -->
-    <view class="card nutrition-detail-card" wx:if="{{nutrition.details && nutrition.details.length > 0}}">
-      <view class="card-title">
-        <text class="icon">📊</text>
-        <text>热量明细</text>
+    <view class="nutrition-detail-section" wx:if="{{nutrition.details && nutrition.details.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">📊</text>
+        <text class="section-title">热量明细</text>
       </view>
       <view class="nutrition-detail-list">
-        <view wx:for="{{nutrition.details}}" wx:key="index" class="nutrition-detail-item {{item.matched ? '' : 'unmatched'}}">
+        <view wx:for="{{nutrition.details}}" wx:key="index" class="nutrition-detail-row {{item.matched ? '' : 'unmatched'}}">
           <view class="detail-name">{{item.name}}</view>
-          <view class="detail-value" wx:if="{{item.matched}}">
-            <text>{{item.kcal}} kcal</text>
-            <text class="detail-sub">{{item.grams}}g</text>
+          <view class="detail-values" wx:if="{{item.matched}}">
+            <text class="detail-kcal">{{item.kcal}} kcal</text>
+            <text class="detail-grams">{{item.grams}}g</text>
           </view>
-          <view class="detail-value" wx:else>
-            <text class="unmatched-text">未匹配营养数据</text>
+          <view class="detail-unmatched" wx:else>
+            <text>未匹配营养数据</text>
           </view>
         </view>
       </view>
     </view>
 
-    <!-- 做菜步骤 -->
-    <view class="card steps-card">
-      <view class="card-title">
-        <text class="icon">👨‍🍳</text>
-        <text>做菜步骤</text>
+    <!-- 烹饪步骤 -->
+    <view class="steps-section">
+      <view class="section-header">
+        <text class="section-icon">👨‍🍳</text>
+        <text class="section-title">烹饪步骤</text>
       </view>
       <view class="steps-list">
-        <view wx:for="{{recipe.steps}}" wx:key="index" class="step-item">
-          <view class="step-number">{{item.order}}</view>
-          <view class="step-content">
-            <view class="step-title">{{item.title}}</view>
-            <view class="step-desc">{{item.description}}</view>
-            <view class="step-meta" wx:if="{{item.start_time || item.end_time}}">
-              <text class="step-time">⏱ {{item.start_time ? (item.start_time/60).toFixed(0) + ':' + (item.start_time%60).toFixed(0).padStart(2,'0') : '00:00'}} - {{item.end_time ? (item.end_time/60).toFixed(0) + ':' + (item.end_time%60).toFixed(0).padStart(2,'0') : '00:00'}}</text>
+        <view wx:for="{{recipe.steps}}" wx:key="index" class="step-row">
+          <view class="step-timeline">
+            <view class="step-number">{{item.order}}</view>
+            <view wx:if="{{index < recipe.steps.length - 1}}" class="step-line"></view>
+          </view>
+          <view class="step-body">
+            <view class="step-title-text">{{item.title}}</view>
+            <view class="step-desc-text">{{item.description}}</view>
+            <view class="step-time-badge" wx:if="{{item.start_time || item.end_time}}">
+              <text class="time-icon">⏱</text>
+              <text wx:if="{{item.start_time && item.end_time}}">{{formatTime(item.start_time)}} - {{formatTime(item.end_time)}}</text>
+              <text wx:elif="{{item.start_time}}">{{formatTime(item.start_time)}}</text>
+              <text wx:else>{{formatTime(item.end_time)}}</text>
             </view>
             <view class="step-techniques" wx:if="{{item.techniques && item.techniques.length > 0}}">
-              <view wx:for="{{item.techniques}}" wx:for-item="tech" wx:key="*this" class="technique-tag">{{tech}}</view>
+              <view wx:for="{{item.techniques}}" wx:for-item="tech" wx:key="*this" class="technique-chip">{{tech}}</view>
             </view>
           </view>
         </view>
@@ -146,19 +169,31 @@
     </view>
 
     <!-- 烹饪技巧 -->
-    <view class="card tips-card" wx:if="{{recipe.tips && recipe.tips.length > 0}}">
-      <view class="card-title">
-        <text class="icon">💡</text>
-        <text>烹饪技巧</text>
+    <view class="tips-section" wx:if="{{recipe.tips && recipe.tips.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">烹饪技巧</text>
       </view>
-      <view class="tips-content">
-        <view wx:for="{{recipe.tips}}" wx:key="*this" class="tip-text">• {{item}}</view>
+      <view class="tips-list">
+        <view wx:for="{{recipe.tips}}" wx:key="*this" class="tip-row">
+          <view class="tip-bullet"></view>
+          <text class="tip-content">{{item}}</text>
+        </view>
       </view>
     </view>
 
-    <!-- 底部按钮 -->
-    <view class="bottom-actions">
-      <view class="btn btn-primary" bindtap="goBack">🏠 返回首页</view>
+    <!-- 数据来源 -->
+    <view class="data-source-bar">
+      <text class="source-label">数据来源</text>
+      <text class="source-value">{{textSources.has_subtitle ? '视频字幕 + AI识别解析' : '视频简介/评论 + AI识别解析'}}</text>
     </view>
+
+    <!-- 底部间距 -->
+    <view class="bottom-spacer"></view>
   </block>
+
+  <!-- 底部固定按钮 -->
+  <view wx:if="{{!loading && !error}}" class="bottom-bar">
+    <view class="btn btn-primary" bindtap="goBack">🏠 返回首页</view>
+  </view>
 </view>

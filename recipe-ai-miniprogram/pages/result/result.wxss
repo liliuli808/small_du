@@ -1,3 +1,9 @@
+/* ===== 结果页 ===== */
+.result-container {
+  padding-bottom: 0;
+}
+
+/* 加载/错误状态 */
 .loading-container, .error-container {
   display: flex;
   flex-direction: column;
@@ -8,148 +14,319 @@
   color: var(--text-secondary);
 }
 
-.error-icon {
-  font-size: 80rpx;
+.loading-spinner-large {
+  width: 64rpx;
+  height: 64rpx;
+  border: 4rpx solid var(--surface-dim);
+  border-top-color: var(--primary-container);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-/* 视频卡片 */
-.video-card {
-  padding: 28rpx 32rpx;
+.loading-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
 }
 
-.video-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.4;
-  margin-bottom: 12rpx;
-}
-
-.video-meta {
+.error-circle {
+  width: 160rpx;
+  height: 160rpx;
+  background: var(--surface-container);
+  border-radius: 50%;
   display: flex;
-  gap: 24rpx;
+  align-items: center;
+  justify-content: center;
+  font-size: 72rpx;
   margin-bottom: 16rpx;
 }
 
-.meta-item {
+.error-text {
+  font-size: 28rpx;
+  color: var(--text-secondary);
+  margin-bottom: 32rpx;
+}
+
+/* 视频信息卡片 */
+.video-info-card {
+  display: flex;
+  gap: 24rpx;
+  background: var(--surface-container-lowest);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.video-thumb {
+  width: 120rpx;
+  height: 120rpx;
+  background: linear-gradient(135deg, var(--surface-container-high) 0%, var(--surface-container) 100%);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.video-thumb-icon {
+  font-size: 56rpx;
+}
+
+.video-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12rpx;
+}
+
+.video-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.video-meta-row {
+  display: flex;
+  gap: 24rpx;
+}
+
+.video-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
   font-size: 24rpx;
   color: var(--text-secondary);
 }
 
-.source-tags {
+.meta-icon {
+  font-size: 22rpx;
+}
+
+.source-tags-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12rpx;
-  margin-bottom: 12rpx;
+  gap: 8rpx;
 }
 
-.warning-text {
-  font-size: 24rpx;
-  color: var(--warning);
-  background: #fef3c7;
-  padding: 16rpx;
-  border-radius: 8rpx;
+.source-tag {
+  padding: 6rpx 16rpx;
+  background: var(--surface-container-low);
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  color: var(--text-secondary);
 }
 
-/* 菜名 */
-.dish-header {
-  text-align: center;
-  padding: 32rpx;
+/* 菜谱标题 */
+.dish-header-card {
+  background: linear-gradient(135deg, var(--primary) 0%, #c43a00 100%);
+  border-radius: 24rpx;
+  padding: 36rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-lg);
 }
 
 .dish-name {
   font-size: 40rpx;
   font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 8rpx;
+  color: #fff;
+  margin-bottom: 16rpx;
+  letter-spacing: -0.01em;
 }
 
-.dish-servings {
-  font-size: 26rpx;
-  color: var(--text-secondary);
+.dish-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  align-items: center;
 }
 
-.uncertain-banner {
-  margin-top: 20rpx;
-  padding: 16rpx 20rpx;
-  background: #fef3c7;
-  border-radius: 8rpx;
+.servings-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 20rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999rpx;
   font-size: 24rpx;
-  color: var(--warning);
-  text-align: left;
+  color: #fff;
 }
 
-/* 热量概览 */
+.servings-icon {
+  font-size: 22rpx;
+}
+
+.uncertain-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  background: rgba(253, 192, 3, 0.25);
+  border-radius: 999rpx;
+  font-size: 24rpx;
+  color: #fff8f0;
+}
+
+/* 营养概览卡片 */
+.nutrition-overview-card {
+  background: var(--surface-container-lowest);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.nutrition-overview-title {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+}
+
+.overview-icon {
+  font-size: 32rpx;
+}
+
 .nutrition-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16rpx;
+  margin-bottom: 20rpx;
 }
 
-.nutrition-item {
+.nutrition-cell {
   text-align: center;
-  padding: 20rpx;
-  background: var(--bg-secondary);
-  border-radius: 12rpx;
+  padding: 20rpx 12rpx;
+  background: var(--surface-container-low);
+  border-radius: 16rpx;
 }
 
-.nutrition-item.total {
-  grid-column: span 1;
-  background: var(--primary-light);
+.nutrition-cell.total {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--surface-container) 100%);
 }
 
-.nutrition-item.per-serving {
-  grid-column: span 1;
-  background: #dbeafe;
+.nutrition-cell.per {
+  background: linear-gradient(135deg, #eaffe2 0%, var(--surface-container) 100%);
 }
 
-.nutrition-value {
+.nutrition-cell-value {
   font-size: 36rpx;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 4rpx;
+  margin-bottom: 6rpx;
 }
 
-.nutrition-value.protein {
-  color: #10b981;
+.nutrition-cell-value.protein {
+  color: var(--secondary);
 }
 
-.nutrition-value.fat {
-  color: #f59e0b;
+.nutrition-cell-value.fat {
+  color: var(--tertiary);
 }
 
-.nutrition-value.carbs {
-  color: #3b82f6;
+.nutrition-cell-value.carbs {
+  color: #5b7cfa;
 }
 
-.nutrition-label {
+.nutrition-cell-label {
   font-size: 22rpx;
   color: var(--text-secondary);
 }
 
-.nutrition-disclaimer {
-  margin-top: 20rpx;
-  padding: 16rpx;
-  background: #f8f9fa;
-  border-radius: 8rpx;
+.nutrition-hint {
+  padding: 16rpx 20rpx;
+  background: var(--surface-container-low);
+  border-radius: 12rpx;
   font-size: 22rpx;
   color: var(--text-tertiary);
+  line-height: 1.5;
 }
 
-/* 材料清单 */
+/* 通用区块 */
+.ingredients-section,
+.nutrition-detail-section,
+.steps-section,
+.tips-section {
+  background: var(--surface-container-lowest);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 24rpx;
+}
+
+.section-icon {
+  font-size: 32rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.servings-tag {
+  padding: 6rpx 16rpx;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+/* 食材列表 */
 .ingredients-list {
   display: flex;
   flex-direction: column;
+  gap: 8rpx;
+}
+
+.ingredient-row {
+  display: flex;
+  align-items: flex-start;
   gap: 16rpx;
+  padding: 16rpx;
+  border-radius: 16rpx;
+  transition: background 0.2s;
 }
 
-.ingredient-item {
-  padding: 20rpx;
-  background: var(--bg-secondary);
-  border-radius: 12rpx;
+.ingredient-row:active {
+  background: var(--surface-container-low);
 }
 
-.ingredient-main {
+.ingredient-check {
+  padding-top: 4rpx;
+}
+
+.check-circle {
+  width: 40rpx;
+  height: 40rpx;
+  border: 3rpx solid var(--outline);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.ingredient-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.ingredient-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -163,58 +340,89 @@
 }
 
 .ingredient-grams {
-  font-size: 32rpx;
+  font-size: 30rpx;
   font-weight: 600;
   color: var(--primary);
 }
 
-.ingredient-detail {
+.ingredient-bottom {
   display: flex;
-  flex-direction: column;
-  gap: 4rpx;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12rpx;
 }
 
-.ingredient-original {
+.ingredient-source {
   font-size: 24rpx;
-  color: var(--text-secondary);
+  color: var(--text-tertiary);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.ingredient-meta {
+.confidence-badge {
   display: flex;
-  gap: 16rpx;
+  align-items: center;
+  gap: 8rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 999rpx;
   font-size: 22rpx;
+  font-weight: 500;
+  flex-shrink: 0;
 }
 
-.confidence.high {
-  color: var(--success);
+.confidence-badge.high {
+  background: var(--secondary-light);
+  color: var(--secondary);
 }
 
-.confidence.medium {
-  color: var(--warning);
+.confidence-badge.medium {
+  background: var(--tertiary-light);
+  color: var(--tertiary);
 }
 
-.confidence.low {
+.confidence-badge.low {
+  background: #fef2f2;
   color: var(--error);
+}
+
+.confidence-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+
+.confidence-dot.high {
+  background: var(--secondary-container);
+}
+
+.confidence-dot.medium {
+  background: var(--tertiary-container);
+}
+
+.confidence-dot.low {
+  background: var(--error-container);
 }
 
 /* 热量明细 */
 .nutrition-detail-list {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 8rpx;
 }
 
-.nutrition-detail-item {
+.nutrition-detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16rpx 20rpx;
-  background: var(--bg-secondary);
-  border-radius: 8rpx;
+  padding: 20rpx;
+  background: var(--surface-container-low);
+  border-radius: 16rpx;
 }
 
-.nutrition-detail-item.unmatched {
-  opacity: 0.6;
+.nutrition-detail-row.unmatched {
+  opacity: 0.5;
 }
 
 .detail-name {
@@ -222,44 +430,53 @@
   color: var(--text-primary);
 }
 
-.detail-value {
+.detail-values {
   text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
 }
 
-.detail-value text {
-  display: block;
+.detail-kcal {
   font-size: 28rpx;
   font-weight: 600;
   color: var(--primary);
 }
 
-.detail-sub {
-  font-size: 22rpx !important;
-  font-weight: 400 !important;
-  color: var(--text-secondary) !important;
+.detail-grams {
+  font-size: 22rpx;
+  color: var(--text-secondary);
 }
 
-.unmatched-text {
+.detail-unmatched {
   font-size: 24rpx;
   color: var(--text-tertiary);
 }
 
-/* 步骤 */
+/* 烹饪步骤 */
 .steps-list {
   display: flex;
   flex-direction: column;
-  gap: 20rpx;
+  gap: 8rpx;
 }
 
-.step-item {
+.step-row {
   display: flex;
   gap: 20rpx;
+  padding: 16rpx 0;
+}
+
+.step-timeline {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .step-number {
   width: 48rpx;
   height: 48rpx;
-  background: var(--primary);
+  background: linear-gradient(135deg, var(--primary-container) 0%, var(--primary) 100%);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -270,28 +487,47 @@
   flex-shrink: 0;
 }
 
-.step-content {
+.step-line {
+  width: 3rpx;
   flex: 1;
+  min-height: 40rpx;
+  background: var(--surface-dim);
+  margin: 8rpx 0;
 }
 
-.step-title {
+.step-body {
+  flex: 1;
+  padding-bottom: 16rpx;
+}
+
+.step-title-text {
   font-size: 30rpx;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 8rpx;
 }
 
-.step-desc {
+.step-desc-text {
   font-size: 26rpx;
   color: var(--text-secondary);
   line-height: 1.6;
-  margin-bottom: 8rpx;
+  margin-bottom: 12rpx;
 }
 
-.step-meta {
+.step-time-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background: var(--surface-container);
+  border-radius: 999rpx;
   font-size: 22rpx;
-  color: var(--text-tertiary);
-  margin-bottom: 8rpx;
+  color: var(--text-secondary);
+  margin-bottom: 12rpx;
+}
+
+.time-icon {
+  font-size: 20rpx;
 }
 
 .step-techniques {
@@ -300,29 +536,68 @@
   gap: 8rpx;
 }
 
-.technique-tag {
-  padding: 6rpx 16rpx;
-  background: #e0f2fe;
-  color: #0369a1;
-  border-radius: 6rpx;
+.technique-chip {
+  padding: 8rpx 18rpx;
+  background: #e8f0fe;
+  color: #4a6cf7;
+  border-radius: 999rpx;
   font-size: 22rpx;
+  font-weight: 500;
 }
 
-/* 技巧 */
-.tips-content {
+/* 烹饪技巧 */
+.tips-list {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 16rpx;
 }
 
-.tip-text {
+.tip-row {
+  display: flex;
+  gap: 16rpx;
+  align-items: flex-start;
+}
+
+.tip-bullet {
+  width: 10rpx;
+  height: 10rpx;
+  background: var(--primary-container);
+  border-radius: 50%;
+  margin-top: 14rpx;
+  flex-shrink: 0;
+}
+
+.tip-content {
   font-size: 26rpx;
   color: var(--text-secondary);
   line-height: 1.6;
+  flex: 1;
+}
+
+/* 数据来源 */
+.data-source-bar {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 24rpx 32rpx;
+  background: var(--surface-container);
+  border-radius: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.source-label {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.source-value {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
 }
 
 /* 底部 */
-.bottom-actions {
-  padding: 32rpx;
-  margin-bottom: 48rpx;
+.bottom-spacer {
+  height: 160rpx;
 }

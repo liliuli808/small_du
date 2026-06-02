@@ -107,14 +107,4 @@ func truncate(s string, maxLen int) string {
 	return string(runes[:maxLen]) + "..."
 }
 
-func uniqueStrings(arr []string) []string {
-	seen := make(map[string]bool)
-	var result []string
-	for _, s := range arr {
-		if !seen[s] {
-			seen[s] = true
-			result = append(result, s)
-		}
-	}
-	return result
-}
+

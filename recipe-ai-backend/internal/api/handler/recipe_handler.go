@@ -50,7 +50,7 @@ func (h *RecipeHandler) GetRecipe(c *gin.Context) {
 // Recalculate 重新计算热量
 func (h *RecipeHandler) Recalculate(c *gin.Context) {
 	recipeIDStr := c.Param("recipe_id")
-	recipeID, err := strconv.ParseInt(recipeIDStr, 10, 64)
+	_, err := strconv.ParseInt(recipeIDStr, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, model.APIResponse{
 			Code:    "INVALID_RECIPE_ID",

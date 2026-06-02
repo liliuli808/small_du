@@ -1,54 +1,89 @@
 <view class="container task-container">
-  <!-- 加载中状态 -->
-  <view wx:if="{{status === 'pending' || status === 'processing'}}">
-    <view class="loading-section">
-      <view class="loading-animation">
-        <view class="loading-ring"></view>
-      </view>
-
-      <view class="loading-title">{{message}}</view>
-      <view class="loading-subtitle">已用时 {{elapsedTime}} 秒</view>
-
-      <view class="progress-steps">
-        <view class="step {{elapsedTime >= 2 ? 'active' : ''}}">
-          <view class="step-dot"></view>
-          <view class="step-label">解析链接</view>
-        </view>
-        <view class="step {{elapsedTime >= 4 ? 'active' : ''}}">
-          <view class="step-dot"></view>
-          <view class="step-label">获取信息</view>
-        </view>
-        <view class="step {{elapsedTime >= 6 ? 'active' : ''}}">
-          <view class="step-dot"></view>
-          <view class="step-label">AI解析</view>
-        </view>
-        <view class="step {{elapsedTime >= 10 ? 'active' : ''}}">
-          <view class="step-dot"></view>
-          <view class="step-label">计算热量</view>
+  <!-- 解析中状态 -->
+  <view wx:if="{{status === 'pending' || status === 'processing'}}" class="parsing-section">
+    <!-- 圆形进度 -->
+    <view class="progress-ring-wrapper">
+      <view class="progress-ring">
+        <view class="progress-ring-inner">
+          <text class="progress-icon">👨‍🍳</text>
         </view>
       </view>
+      <view class="progress-pulse"></view>
+    </view>
+
+    <!-- 状态文字 -->
+    <view class="status-text">{{message}}</view>
+    <view class="status-sub">已用时 {{elapsedTime}} 秒</view>
+
+    <!-- 步骤进度 -->
+    <view class="steps-track">
+      <view class="step-track-item {{elapsedTime >= 0 ? 'active' : ''}}">
+        <view class="step-track-dot"></view>
+        <text class="step-track-label">解析链接</text>
+      </view>
+      <view class="step-track-line {{elapsedTime >= 4 ? 'active' : ''}}"></view>
+      <view class="step-track-item {{elapsedTime >= 4 ? 'active' : ''}}">
+        <view class="step-track-dot"></view>
+        <text class="step-track-label">提取食材</text>
+      </view>
+      <view class="step-track-line {{elapsedTime >= 8 ? 'active' : ''}}"></view>
+      <view class="step-track-item {{elapsedTime >= 8 ? 'active' : ''}}">
+        <view class="step-track-dot"></view>
+        <text class="step-track-label">生成步骤</text>
+      </view>
+      <view class="step-track-line {{elapsedTime >= 12 ? 'active' : ''}}"></view>
+      <view class="step-track-item {{elapsedTime >= 12 ? 'active' : ''}}">
+        <view class="step-track-dot"></view>
+        <text class="step-track-label">计算营养</text>
+      </view>
+    </view>
+
+    <!-- 提示卡片 -->
+    <view class="hint-card">
+      <view class="hint-icon">⏱️</view>
+      <view class="hint-content">
+        <text class="hint-title">解析过程大约需要10-30秒</text>
+        <text class="hint-desc">AI正在仔细分析视频内容，请稍候</text>
+      </view>
+    </view>
+
+    <!-- 取消按钮 -->
+    <view class="cancel-area">
+      <view class="btn btn-ghost btn-sm" bindtap="goBack">取消解析</view>
     </view>
   </view>
 
   <!-- 失败状态 -->
-  <view wx:if="{{status === 'failed' || status === 'timeout'}}">
-    <view class="error-section">
-      <view class="error-icon">😞</view>
-      <view class="error-title">解析失败</view>
-      <view class="error-message">{{errorMsg || message}}</view>
+  <view wx:if="{{status === 'failed' || status === 'timeout'}}" class="error-section">
+    <view class="error-illustration">
+      <view class="error-circle">😞</view>
+    </view>
+    <view class="error-title">解析失败</view>
+    <view class="error-message">{{errorMsg || message}}</view>
 
-      <view class="error-tips">
-        <view class="tips-title">可能的原因：</view>
-        <view class="tip">• 视频没有字幕、简介或可用评论</view>
-        <view class="tip">• 该视频不是做菜类视频</view>
-        <view class="tip">• B站接口暂时不可用</view>
-        <view class="tip">• 网络连接超时</view>
+    <view class="error-tips-card">
+      <view class="error-tips-title">💡 可能的原因</view>
+      <view class="error-tip-item">
+        <view class="error-tip-dot"></view>
+        <text>视频没有字幕、简介或可用评论</text>
       </view>
+      <view class="error-tip-item">
+        <view class="error-tip-dot"></view>
+        <text>该视频不是做菜类视频</text>
+      </view>
+      <view class="error-tip-item">
+        <view class="error-tip-dot"></view>
+        <text>B站接口暂时不可用</text>
+      </view>
+      <view class="error-tip-item">
+        <view class="error-tip-dot"></view>
+        <text>网络连接超时</text>
+      </view>
+    </view>
 
-      <view class="error-actions">
-        <view class="btn btn-primary" bindtap="retry">重新尝试</view>
-        <view class="btn btn-secondary" bindtap="goBack">返回首页</view>
-      </view>
+    <view class="error-actions">
+      <view class="btn btn-primary" bindtap="retry">🔄 重新尝试</view>
+      <view class="btn btn-secondary" bindtap="goBack">🏠 返回首页</view>
     </view>
   </view>
 </view>

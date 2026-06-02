@@ -30,13 +30,15 @@ type VideoPage struct {
 
 // VideoInfo 视频完整信息
 type VideoInfo struct {
-	AID         int64       `json:"aid"`
-	BVID        string      `json:"bvid"`
-	Title       string      `json:"title"`
-	Description string      `json:"description"`
-	OwnerName   string      `json:"owner_name"`
-	Duration    int         `json:"duration"`
-	Pages       []VideoPage `json:"pages"`
+	AID         int64          `json:"aid"`
+	BVID        string         `json:"bvid"`
+	CID         int64          `json:"cid"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	OwnerName   string         `json:"owner_name"`
+	Duration    int            `json:"duration"`
+	Pages       []VideoPage    `json:"pages"`
+	Subtitles   []SubtitleMeta `json:"subtitles"`
 }
 
 // SubtitleMeta 字幕元信息

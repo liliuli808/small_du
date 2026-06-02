@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
-	"time"
 
 	"recipe-ai-backend/internal/client"
 	"recipe-ai-backend/internal/pkg/config"

@@ -1,66 +1,244 @@
-.servings-control {
+/* ===== 食材编辑页 ===== */
+.edit-container {
+  padding-bottom: 0;
+}
+
+/* 份数卡片 */
+.portion-card {
+  background: var(--surface-container-lowest);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.portion-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16rpx;
+  margin-bottom: 28rpx;
+}
+
+.portion-icon-wrapper {
+  width: 56rpx;
+  height: 56rpx;
+  background: var(--primary-light);
+  border-radius: 16rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24rpx;
+  flex-shrink: 0;
 }
 
-.servings-input {
-  width: 120rpx;
-  text-align: center;
-  padding: 16rpx;
-  border: 2rpx solid var(--border);
-  border-radius: 8rpx;
-  font-size: 32rpx;
-  font-weight: 600;
-}
-
-.ingredients-edit-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-}
-
-.ingredient-edit-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx;
-  background: var(--bg-secondary);
-  border-radius: 12rpx;
-}
-
-.ingredient-name {
-  font-size: 30rpx;
-  color: var(--text-primary);
-  flex: 1;
-}
-
-.grams-input-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.grams-input {
-  width: 140rpx;
-  text-align: right;
-  padding: 12rpx 16rpx;
-  border: 2rpx solid var(--border);
-  border-radius: 8rpx;
+.portion-icon {
   font-size: 28rpx;
 }
 
-.grams-unit {
+.portion-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.portion-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.portion-hint {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+}
+
+/* 份数控制 */
+.portion-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32rpx;
+}
+
+.portion-btn {
+  width: 80rpx;
+  height: 80rpx;
+  background: var(--surface-container);
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.portion-btn.disabled {
+  opacity: 0.4;
+}
+
+.portion-btn-text {
+  font-size: 40rpx;
+  font-weight: 300;
+  color: var(--primary);
+  line-height: 1;
+}
+
+.portion-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  min-width: 120rpx;
+}
+
+.portion-number {
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.portion-unit {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+}
+
+/* 食材卡片 */
+.ingredients-card {
+  background: var(--surface-container-lowest);
+  border-radius: 24rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: var(--shadow-card);
+}
+
+.ingredients-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.ingredients-header-icon {
+  font-size: 32rpx;
+}
+
+.ingredients-header-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ingredients-count {
+  font-size: 24rpx;
+  color: var(--text-tertiary);
+}
+
+/* 食材编辑列表 */
+.ingredients-edit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.ingredient-edit-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16rpx;
+  padding: 20rpx;
+  background: var(--surface-container-low);
+  border-radius: 16rpx;
+}
+
+.ingredient-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.ingredient-name-text {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.ingredient-change {
+  display: flex;
+  align-items: center;
+}
+
+.change-value {
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.change-value.increase {
+  color: var(--secondary);
+}
+
+.change-value.decrease {
+  color: var(--primary-container);
+}
+
+.grams-input-group {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+.grams-input-field {
+  width: 140rpx;
+  text-align: right;
+  padding: 14rpx 18rpx;
+  border: 2rpx solid var(--outline-variant);
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: var(--surface-container-lowest);
+}
+
+.grams-unit-text {
   font-size: 26rpx;
   color: var(--text-secondary);
   min-width: 30rpx;
 }
 
-.bottom-actions {
+/* 底部 */
+.bottom-spacer {
+  height: 160rpx;
+}
+
+/* 底部操作栏 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24rpx 32rpx;
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+  background: var(--surface-container-lowest);
+  border-top: 2rpx solid var(--surface-container);
   display: flex;
-  flex-direction: column;
-  gap: 16rpx;
-  padding: 32rpx;
-  margin-bottom: 48rpx;
+  gap: 20rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(61, 47, 43, 0.05);
+  z-index: 100;
+}
+
+.bottom-bar .btn {
+  flex: 1;
+}
+
+.bottom-bar .btn-secondary {
+  flex: 0.8;
+}
+
+.bottom-bar .btn-primary {
+  flex: 1.2;
+}
+
+.btn-icon {
+  margin-right: 8rpx;
 }

@@ -1,101 +1,224 @@
+/* ===== 解析进度页 ===== */
 .task-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48rpx;
+  padding: 48rpx 40rpx;
+  box-sizing: border-box;
 }
 
-.loading-section {
-  text-align: center;
+/* 解析中状态 */
+.parsing-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.loading-animation {
-  margin-bottom: 40rpx;
+/* 圆形进度 */
+.progress-ring-wrapper {
+  position: relative;
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.loading-ring {
-  width: 120rpx;
-  height: 120rpx;
-  border: 8rpx solid var(--border);
-  border-top-color: var(--primary);
+.progress-ring {
+  width: 200rpx;
+  height: 200rpx;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
+  background: conic-gradient(
+    var(--primary-container) 0%,
+    var(--primary-container) 65%,
+    var(--surface-dim) 65%,
+    var(--surface-dim) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rotate-slow 8s linear infinite;
 }
 
-@keyframes spin {
+.progress-ring-inner {
+  width: 160rpx;
+  height: 160rpx;
+  background: var(--surface-container-lowest);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.progress-icon {
+  font-size: 64rpx;
+}
+
+.progress-pulse {
+  position: absolute;
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--primary-container);
+  opacity: 0;
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+@keyframes rotate-slow {
   to { transform: rotate(360deg); }
 }
 
-.loading-title {
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.6; }
+  100% { transform: scale(1.2); opacity: 0; }
+}
+
+/* 状态文字 */
+.status-text {
   font-size: 36rpx;
   font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
+  text-align: center;
 }
 
-.loading-subtitle {
+.status-sub {
   font-size: 28rpx;
   color: var(--text-secondary);
   margin-bottom: 48rpx;
 }
 
-.progress-steps {
+/* 步骤进度条 */
+.steps-track {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 32rpx;
+  gap: 8rpx;
+  margin-bottom: 48rpx;
+  width: 100%;
 }
 
-.step {
+.step-track-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12rpx;
-  opacity: 0.4;
-  transition: opacity 0.3s;
+  opacity: 0.35;
+  transition: opacity 0.5s;
 }
 
-.step.active {
+.step-track-item.active {
   opacity: 1;
 }
 
-.step-dot {
+.step-track-dot {
   width: 20rpx;
   height: 20rpx;
-  background: var(--border);
   border-radius: 50%;
+  background: var(--surface-dim);
+  transition: all 0.5s;
 }
 
-.step.active .step-dot {
-  background: var(--primary);
-  box-shadow: 0 0 8rpx rgba(255, 107, 53, 0.4);
+.step-track-item.active .step-track-dot {
+  background: var(--primary-container);
+  box-shadow: 0 0 16rpx rgba(252, 107, 56, 0.4);
 }
 
-.step-label {
+.step-track-label {
   font-size: 22rpx;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
-.step.active .step-label {
+.step-track-item.active .step-track-label {
   color: var(--primary);
   font-weight: 500;
 }
 
-/* 错误状态 */
-.error-section {
-  text-align: center;
-  padding: 48rpx;
+.step-track-line {
+  width: 40rpx;
+  height: 3rpx;
+  background: var(--surface-dim);
+  border-radius: 2rpx;
+  transition: background 0.5s;
 }
 
-.error-icon {
-  font-size: 80rpx;
-  margin-bottom: 24rpx;
+.step-track-line.active {
+  background: var(--primary-container);
+}
+
+/* 提示卡片 */
+.hint-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 20rpx;
+  padding: 28rpx 32rpx;
+  background: var(--surface-container-low);
+  border-radius: 20rpx;
+  margin-bottom: 48rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hint-icon {
+  font-size: 40rpx;
+  flex-shrink: 0;
+}
+
+.hint-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.hint-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.hint-desc {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 取消按钮 */
+.cancel-area {
+  padding-bottom: 48rpx;
+}
+
+/* ===== 错误状态 ===== */
+.error-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48rpx 0;
+}
+
+.error-illustration {
+  margin-bottom: 32rpx;
+}
+
+.error-circle {
+  width: 160rpx;
+  height: 160rpx;
+  background: var(--surface-container);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 72rpx;
 }
 
 .error-title {
-  font-size: 36rpx;
-  font-weight: 600;
+  font-size: 40rpx;
+  font-weight: 700;
   color: var(--text-primary);
   margin-bottom: 16rpx;
 }
@@ -104,32 +227,49 @@
   font-size: 28rpx;
   color: var(--error);
   margin-bottom: 40rpx;
-  padding: 24rpx;
-  background: #fee2e2;
-  border-radius: 12rpx;
+  padding: 24rpx 32rpx;
+  background: #fef2f2;
+  border-radius: 16rpx;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.error-tips {
-  text-align: left;
-  background: var(--bg-secondary);
+.error-tips-card {
+  width: 100%;
+  background: var(--surface-container-low);
+  border-radius: 20rpx;
   padding: 32rpx;
-  border-radius: 12rpx;
   margin-bottom: 40rpx;
+  box-sizing: border-box;
 }
 
-.tips-title {
+.error-tips-title {
   font-size: 28rpx;
   font-weight: 600;
-  margin-bottom: 16rpx;
+  color: var(--text-primary);
+  margin-bottom: 20rpx;
 }
 
-.tip {
+.error-tip-item {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  padding: 12rpx 0;
   font-size: 26rpx;
   color: var(--text-secondary);
-  line-height: 1.8;
+}
+
+.error-tip-dot {
+  width: 10rpx;
+  height: 10rpx;
+  background: var(--text-tertiary);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .error-actions {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 20rpx;

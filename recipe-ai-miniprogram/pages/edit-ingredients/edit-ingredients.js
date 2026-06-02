@@ -24,6 +24,7 @@ Page({
       name: item.name,
       grams: item.grams || 0,
       originalGrams: item.grams || 0,
+      changeText: '',
     }))
 
     this.setData({
@@ -34,16 +35,32 @@ Page({
     })
   },
 
-  onServingsChange(e) {
-    const newServings = parseInt(e.detail.value) || 1
+  // 增加份数
+  increaseServings() {
+    this._updateServings(this.data.servings + 1)
+  },
+
+  // 减少份数
+  decreaseServings() {
+    if (this.data.servings <= 1) return
+    this._updateServings(this.data.servings - 1)
+  },
+
+  // 内部更新份数方法
+  _updateServings(newServings) {
     if (newServings < 1) return
 
     // 按比例调整所有材料的克重
     const ratio = newServings / this.data.originalServings
-    const ingredients = this.data.ingredients.map(item => ({
-      ...item,
-      grams: Math.round(item.originalGrams * ratio * 10) / 10,
-    }))
+    const ingredients = this.data.ingredients.map(item => {
+      const newGrams = Math.round(item.originalGrams * ratio * 10) / 10
+      const diff = Math.round((newGrams - item.originalGrams) * 10) / 10
+      return {
+        ...item,
+        grams: newGrams,
+        changeText: diff > 0 ? `+${diff}g` : diff < 0 ? `${diff}g` : '',
+      }
+    })
 
     this.setData({
       servings: newServings,
@@ -51,13 +68,24 @@ Page({
     })
   },
 
+  onServingsChange(e) {
+    const value = e.detail ? e.detail.value : (e.currentTarget ? e.currentTarget.dataset.servings : null)
+    const newServings = parseInt(value) || 1
+    this._updateServings(newServings)
+  },
+
   onGramsChange(e) {
     const index = e.currentTarget.dataset.index
     const grams = parseFloat(e.detail.value)
-    if (grams < 0) return
+    if (grams < 0 || isNaN(grams)) return
 
     const ingredients = this.data.ingredients.slice()
     ingredients[index].grams = grams
+
+    // 更新变化量显示
+    const diff = Math.round((grams - ingredients[index].originalGrams) * 10) / 10
+    ingredients[index].changeText = diff > 0 ? `+${diff}g` : diff < 0 ? `${diff}g` : ''
+
     this.setData({ ingredients })
   },
 
@@ -129,6 +157,7 @@ Page({
     const ingredients = this.data.ingredients.map(item => ({
       ...item,
       grams: item.originalGrams,
+      changeText: '',
     }))
     this.setData({
       servings: this.data.originalServings,

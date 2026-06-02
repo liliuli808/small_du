@@ -5,11 +5,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"recipe-ai-backend/internal/model"
 	"recipe-ai-backend/internal/pkg/logger"
 	"recipe-ai-backend/internal/pkg/validator"
-	"recipe-ai-backend/internal/pkg/xjson"
-	"recipe-ai-backend/internal/repository"
 	"time"
 
 	"github.com/hibiken/asynq"

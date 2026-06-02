@@ -2,12 +2,12 @@ package redis
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"recipe-ai-backend/internal/pkg/config"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/hibiken/asynq"
 )
 
 // Client Redis客户端
@@ -69,9 +69,9 @@ func (c *Client) RateLimitCheck(ctx context.Context, key string, limit int, wind
 }
 
 // AsynqRedisOpt Asynq Redis选项
-func (c *Client) AsynqRedisOpt() redis.UniversalOptions {
-	return redis.UniversalOptions{
-		Addrs:    []string{c.client.Options().Addr},
+func (c *Client) AsynqRedisOpt() asynq.RedisConnOpt {
+	return asynq.RedisClientOpt{
+		Addr:     c.client.Options().Addr,
 		Password: c.client.Options().Password,
 		DB:       c.client.Options().DB,
 	}

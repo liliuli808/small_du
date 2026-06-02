@@ -1,47 +1,82 @@
-<view class="container">
-  <!-- 份数调整 -->
-  <view class="card">
-    <view class="card-title">
-      <text class="icon">🍽</text>
-      <text>份数</text>
+<view class="container edit-container">
+  <!-- 份数调整区 -->
+  <view class="portion-card">
+    <view class="portion-header">
+      <view class="portion-icon-wrapper">
+        <text class="portion-icon">🍽</text>
+      </view>
+      <view class="portion-title-group">
+        <text class="portion-title">调整份数</text>
+        <text class="portion-hint">食材用量将按比例自动调整</text>
+      </view>
     </view>
-    <view class="servings-control">
-      <button class="btn btn-sm btn-secondary" bindtap="onServingsChange" data-servings="{{servings - 1}}">-</button>
-      <input class="servings-input" type="number" value="{{servings}}" bindblur="onServingsChange" />
-      <button class="btn btn-sm btn-secondary" bindtap="onServingsChange" data-servings="{{servings + 1}}">+</button>
+
+    <view class="portion-control">
+      <view
+        class="portion-btn {{servings <= 1 ? 'disabled' : ''}}"
+        bindtap="decreaseServings"
+      >
+        <text class="portion-btn-text">−</text>
+      </view>
+
+      <view class="portion-display">
+        <text class="portion-number">{{servings}}</text>
+        <text class="portion-unit">人份</text>
+      </view>
+
+      <view class="portion-btn" bindtap="increaseServings">
+        <text class="portion-btn-text">+</text>
+      </view>
     </view>
   </view>
 
-  <!-- 材料调整 -->
-  <view class="card">
-    <view class="card-title flex-between">
+  <!-- 食材用量列表 -->
+  <view class="ingredients-card">
+    <view class="ingredients-header">
       <view class="flex-center gap-8">
-        <text class="icon">🥬</text>
-        <text>材料用量</text>
+        <text class="ingredients-header-icon">🥬</text>
+        <text class="ingredients-header-title">食材用量</text>
       </view>
-      <view class="btn btn-sm btn-secondary" bindtap="resetToOriginal">重置</view>
+      <view class="ingredients-count">共 {{ingredients.length}} 项</view>
     </view>
 
     <view class="ingredients-edit-list">
-      <view wx:for="{{ingredients}}" wx:key="index" class="ingredient-edit-item">
-        <text class="ingredient-name">{{item.name}}</text>
-        <view class="grams-input-wrapper">
+      <view wx:for="{{ingredients}}" wx:key="index" class="ingredient-edit-row">
+        <view class="ingredient-info">
+          <text class="ingredient-name-text">{{item.name}}</text>
+          <view class="ingredient-change" wx:if="{{item.grams !== item.originalGrams}}">
+            <text class="change-value {{item.grams > item.originalGrams ? 'increase' : 'decrease'}}">
+              {{item.changeText}}
+            </text>
+          </view>
+        </view>
+
+        <view class="grams-input-group">
           <input
-            class="grams-input"
+            class="grams-input-field"
             type="digit"
             value="{{item.grams}}"
             data-index="{{index}}"
             bindblur="onGramsChange"
           />
-          <text class="grams-unit">g</text>
+          <text class="grams-unit-text">g</text>
         </view>
       </view>
     </view>
   </view>
 
-  <!-- 提交按钮 -->
-  <view class="bottom-actions">
-    <view class="btn btn-primary" bindtap="submitRecalculate">重新计算热量</view>
-    <view class="btn btn-secondary" bindtap="goBack">取消</view>
+  <!-- 底部间距 -->
+  <view class="bottom-spacer"></view>
+</view>
+
+<!-- 底部固定操作栏 -->
+<view class="bottom-bar">
+  <view class="btn btn-secondary" bindtap="resetToOriginal">
+    <text class="btn-icon">↺</text>
+    <text>恢复默认</text>
+  </view>
+  <view class="btn btn-primary" bindtap="submitRecalculate">
+    <text class="btn-icon">⚖️</text>
+    <text>重新计算营养</text>
   </view>
 </view>

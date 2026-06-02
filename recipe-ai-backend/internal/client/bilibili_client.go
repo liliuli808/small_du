@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"net/url"
 	"recipe-ai-backend/internal/model"
 	"recipe-ai-backend/internal/pkg/logger"
 	"recipe-ai-backend/internal/pkg/parser"
@@ -65,6 +64,15 @@ func (c *BilibiliClient) GetVideoInfo(ctx context.Context, bvid string) (*model.
 				Part     string `json:"part"`
 				Duration int    `json:"duration"`
 			} `json:"pages"`
+			Subtitle struct {
+				List []struct {
+					ID          int64  `json:"id"`
+					Lan         string `json:"lan"`
+					LanDoc      string `json:"lan_doc"`
+					SubtitleURL string `json:"subtitle_url"`
+					AIStatus    int    `json:"ai_status"`
+				} `json:"list"`
+			} `json:"subtitle"`
 		} `json:"data"`
 	}
 
@@ -100,59 +108,30 @@ func (c *BilibiliClient) GetVideoInfo(ctx context.Context, bvid string) (*model.
 		info.CID = info.Pages[0].CID
 	}
 
+	// 解析字幕列表
+	for _, s := range result.Data.Subtitle.List {
+		info.Subtitles = append(info.Subtitles, model.SubtitleMeta{
+			ID:          s.ID,
+			Lan:         s.Lan,
+			LanDoc:      s.LanDoc,
+			SubtitleURL: s.SubtitleURL,
+			AIStatus:    s.AIStatus,
+		})
+	}
+
 	logger.Info("获取视频信息成功", logger.String("bvid", bvid), logger.String("title", info.Title))
 	return info, nil
 }
 
-// TryGetSubtitle 尝试获取字幕
+// TryGetSubtitle 尝试获取字幕（从 videoInfo 中已经获取的字幕列表提取）
 func (c *BilibiliClient) TryGetSubtitle(ctx context.Context, videoInfo *model.VideoInfo) (string, bool) {
-	if videoInfo.CID == 0 {
-		return "", false
-	}
-
-	apiURL := fmt.Sprintf("%s/x/player/wbi/v2?cid=%d&bvid=%s", c.baseURL, videoInfo.CID, videoInfo.BVID)
-
-	resp, err := c.httpClient.Get(ctx, apiURL)
-	if err != nil {
-		logger.ErrorLog("获取字幕列表失败", logger.Error(err))
-		return "", false
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		logger.ErrorLog("读取字幕列表失败", logger.Error(err))
-		return "", false
-	}
-
-	var result struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			Subtitle struct {
-				Subtitles []struct {
-					ID          int64  `json:"id"`
-					Lan         string `json:"lan"`
-					LanDoc      string `json:"lan_doc"`
-					SubtitleURL string `json:"subtitle_url"`
-					AIStatus    int    `json:"ai_status"`
-				} `json:"subtitles"`
-			} `json:"subtitle"`
-		} `json:"data"`
-	}
-
-	if err := json.Unmarshal(body, &result); err != nil {
-		logger.ErrorLog("解析字幕列表失败", logger.Error(err))
-		return "", false
-	}
-
-	if result.Code != 0 || len(result.Data.Subtitle.Subtitles) == 0 {
+	if videoInfo.CID == 0 || len(videoInfo.Subtitles) == 0 {
 		logger.Info("视频无字幕", logger.String("bvid", videoInfo.BVID))
 		return "", false
 	}
 
 	// 选择最佳字幕
-	subtitle := c.selectBestSubtitle(result.Data.Subtitle.Subtitles)
+	subtitle := c.selectBestSubtitle(videoInfo.Subtitles)
 	if subtitle == nil {
 		return "", false
 	}
@@ -173,13 +152,7 @@ func (c *BilibiliClient) TryGetSubtitle(ctx context.Context, videoInfo *model.Vi
 }
 
 // selectBestSubtitle 选择最佳字幕
-func (c *BilibiliClient) selectBestSubtitle(subtitles []struct {
-	ID          int64  `json:"id"`
-	Lan         string `json:"lan"`
-	LanDoc      string `json:"lan_doc"`
-	SubtitleURL string `json:"subtitle_url"`
-	AIStatus    int    `json:"ai_status"`
-}) *model.SubtitleMeta {
+func (c *BilibiliClient) selectBestSubtitle(subtitles []model.SubtitleMeta) *model.SubtitleMeta {
 	if len(subtitles) == 0 {
 		return nil
 	}
@@ -201,14 +174,6 @@ func (c *BilibiliClient) selectBestSubtitle(subtitles []struct {
 
 	var scored []scoredSubtitle
 	for _, s := range subtitles {
-		meta := model.SubtitleMeta{
-			ID:          s.ID,
-			Lan:         s.Lan,
-			LanDoc:      s.LanDoc,
-			SubtitleURL: s.SubtitleURL,
-			AIStatus:    s.AIStatus,
-		}
-
 		score := priority[s.Lan]
 		if score == 0 {
 			score = 10 // 默认低分
@@ -219,7 +184,7 @@ func (c *BilibiliClient) selectBestSubtitle(subtitles []struct {
 			score -= 20
 		}
 
-		scored = append(scored, scoredSubtitle{meta: meta, score: score})
+		scored = append(scored, scoredSubtitle{meta: s, score: score})
 	}
 
 	// 按分数排序
@@ -233,6 +198,11 @@ func (c *BilibiliClient) selectBestSubtitle(subtitles []struct {
 
 // fetchSubtitleContent 获取字幕内容
 func (c *BilibiliClient) fetchSubtitleContent(ctx context.Context, subtitleURL string) (string, error) {
+	// 处理协议相对路径（如 //i0.hdslb.com/...）
+	if strings.HasPrefix(subtitleURL, "//") {
+		subtitleURL = "https:" + subtitleURL
+	}
+
 	resp, err := c.httpClient.Get(ctx, subtitleURL)
 	if err != nil {
 		return "", err
