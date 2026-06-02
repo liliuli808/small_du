@@ -122,7 +122,7 @@ func (s *RecipeService) GetRecipeResponse(ctx context.Context, recipeID int64) (
 	}
 
 	// 获取视频信息 - 通过recipe关联
-	video, _ := s.videoRepo.GetByBVID(ctx, "")
+	video, _ := s.videoRepo.GetByID(ctx, recipe.VideoID)
 	if video == nil {
 		video = &model.BilibiliVideo{}
 	}

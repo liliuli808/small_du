@@ -10,6 +10,7 @@ import (
 // VideoRepository 视频存储接口
 type VideoRepository interface {
 	CreateOrGet(ctx context.Context, video *model.BilibiliVideo) (*model.BilibiliVideo, error)
+	GetByID(ctx context.Context, id int64) (*model.BilibiliVideo, error)
 	GetByBVID(ctx context.Context, bvid string) (*model.BilibiliVideo, error)
 }
 
@@ -44,6 +45,16 @@ func (r *videoRepository) CreateOrGet(ctx context.Context, video *model.Bilibili
 		return nil, err
 	}
 	return video, nil
+}
+
+// GetByID 根据ID查询
+func (r *videoRepository) GetByID(ctx context.Context, id int64) (*model.BilibiliVideo, error) {
+	var video model.BilibiliVideo
+	err := r.db.WithContext(ctx).Where("id = ?", id).First(&video).Error
+	if err != nil {
+		return nil, err
+	}
+	return &video, nil
 }
 
 // GetByBVID 根据BVID查询

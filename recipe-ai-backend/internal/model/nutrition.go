@@ -11,10 +11,10 @@ type NutritionFood struct {
 	ID             int64     `gorm:"primaryKey;autoIncrement" json:"id"`
 	CanonicalName  string    `gorm:"type:varchar(255);not null;index" json:"canonical_name"`
 	Aliases        StringArray `gorm:"type:jsonb" json:"aliases"`
-	KcalPer100g    float64   `json:"kcal_per_100g"`
-	ProteinPer100g float64   `json:"protein_per_100g"`
-	FatPer100g     float64   `json:"fat_per_100g"`
-	CarbsPer100g   float64   `json:"carbs_per_100g"`
+	KcalPer100g    float64   `gorm:"column:kcal_per_100g" json:"kcal_per_100g"`
+	ProteinPer100g float64   `gorm:"column:protein_per_100g" json:"protein_per_100g"`
+	FatPer100g     float64   `gorm:"column:fat_per_100g" json:"fat_per_100g"`
+	CarbsPer100g   float64   `gorm:"column:carbs_per_100g" json:"carbs_per_100g"`
 	Source         string    `gorm:"type:varchar(128)" json:"source"`
 	CreatedAt      time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt      time.Time `gorm:"autoUpdateTime" json:"updated_at"`
