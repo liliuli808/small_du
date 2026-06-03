@@ -9,6 +9,8 @@ Page({
     textSources: {},
     recipe: {},
     nutrition: {},
+    isFavorited: false,
+    favoriteLoading: false,
   },
 
   onLoad(options) {
@@ -21,6 +23,7 @@ Page({
 
     this.setData({ recipeId })
     this.loadRecipe(recipeId)
+    this.checkFavoriteStatus(recipeId)
   },
 
   loadRecipe(recipeId) {
@@ -47,6 +50,55 @@ Page({
         this.setData({
           error: '网络错误，请稍后重试',
           loading: false,
+        })
+      },
+    })
+  },
+
+  checkFavoriteStatus(recipeId) {
+    wx.request({
+      url: `${app.globalData.apiBaseURL}/recipes/${recipeId}/favorite`,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          this.setData({ isFavorited: res.data.is_favorited })
+        }
+      },
+    })
+  },
+
+  toggleFavorite() {
+    if (this.data.favoriteLoading) return
+
+    this.setData({ favoriteLoading: true })
+    wx.request({
+      url: `${app.globalData.apiBaseURL}/recipes/${this.data.recipeId}/favorite`,
+      method: 'POST',
+      success: (res) => {
+        this.setData({ favoriteLoading: false })
+        if (res.statusCode === 200) {
+          this.setData({ isFavorited: res.data.is_favorited })
+          wx.showToast({
+            title: res.data.is_favorited ? '已收藏' : '已取消收藏',
+            icon: 'none',
+          })
+        } else if (res.statusCode === 401) {
+          wx.showToast({
+            title: '请先登录',
+            icon: 'none',
+          })
+        } else {
+          wx.showToast({
+            title: res.data?.message || '操作失败',
+            icon: 'none',
+          })
+        }
+      },
+      fail: () => {
+        this.setData({ favoriteLoading: false })
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none',
         })
       },
     })

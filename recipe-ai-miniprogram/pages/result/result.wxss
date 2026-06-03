@@ -173,6 +173,44 @@
   color: #fff8f0;
 }
 
+/* 收藏按钮 */
+.dish-header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16rpx;
+}
+
+.favorite-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rpx;
+  padding: 12rpx 16rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16rpx;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.favorite-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.favorite-btn.loading {
+  opacity: 0.6;
+}
+
+.favorite-icon {
+  font-size: 36rpx;
+}
+
+.favorite-text {
+  font-size: 20rpx;
+  color: #fff;
+}
+
 /* 营养概览卡片 */
 .nutrition-overview-card {
   background: var(--surface-container-lowest);

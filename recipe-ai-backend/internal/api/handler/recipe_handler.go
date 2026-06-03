@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"net/http"
 	"recipe-ai-backend/internal/model"
 	"recipe-ai-backend/internal/service"
@@ -35,11 +36,33 @@ func (h *RecipeHandler) GetRecipe(c *gin.Context) {
 		return
 	}
 
+	// 异步增加浏览量（不阻塞响应，使用独立 context）
+	go h.recipeService.IncrementViewCount(context.Background(), recipeID)
+
 	resp, err := h.recipeService.GetRecipeResponse(c.Request.Context(), recipeID)
 	if err != nil {
 		c.JSON(http.StatusNotFound, model.APIResponse{
 			Code:    "RECIPE_NOT_FOUND",
 			Message: "菜谱不存在",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, resp)
+}
+
+// ListPopularRecipes 获取热门菜谱
+func (h *RecipeHandler) ListPopularRecipes(c *gin.Context) {
+	limit := 10
+	if l, err := strconv.Atoi(c.Query("limit")); err == nil && l > 0 && l <= 50 {
+		limit = l
+	}
+
+	resp, err := h.recipeService.ListPopularRecipes(c.Request.Context(), limit)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, model.APIResponse{
+			Code:    "LIST_FAILED",
+			Message: err.Error(),
 		})
 		return
 	}

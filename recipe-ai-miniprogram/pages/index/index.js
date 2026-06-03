@@ -8,10 +8,17 @@ Page({
       'https://www.bilibili.com/video/BV1xx411c7mD',
       'https://b23.tv/xxxxxx',
     ],
+    popularRecipes: [],
+    popularLoading: false,
   },
 
   onLoad() {
-    // 页面加载
+    this.loadPopularRecipes()
+  },
+
+  onShow() {
+    // 每次显示页面时刷新热门推荐
+    this.loadPopularRecipes()
   },
 
   onInputChange(e) {
@@ -108,6 +115,40 @@ Page({
           icon: 'none',
         })
       },
+    })
+  },
+
+  loadPopularRecipes() {
+    this.setData({ popularLoading: true })
+    wx.request({
+      url: `${app.globalData.apiBaseURL}/recipes/popular?limit=10`,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200 && res.data.recipes) {
+          this.setData({
+            popularRecipes: res.data.recipes,
+            popularLoading: false,
+          })
+        } else {
+          this.setData({ popularLoading: false })
+        }
+      },
+      fail: () => {
+        this.setData({ popularLoading: false })
+      },
+    })
+  },
+
+  goToRecipe(e) {
+    const recipeId = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/result/result?recipe_id=${recipeId}`,
+    })
+  },
+
+  goToMine() {
+    wx.navigateTo({
+      url: '/pages/mine/mine',
     })
   },
 

@@ -1,0 +1,47 @@
+<view class="container user-recipes-container">
+  <view class="page-header">
+    <view class="back-btn" bindtap="goBack">‹ 返回</view>
+    <view class="page-title">我的菜谱</view>
+    <view class="create-btn" bindtap="goToCreate">+ 新建</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{recipes.length === 0}}" class="empty-state">
+    <view class="empty-icon">📝</view>
+    <view class="empty-text">还没有创建菜谱</view>
+    <view class="empty-hint">点击右上角"+ 新建"创建你的第一个菜谱</view>
+  </view>
+
+  <!-- 菜谱列表 -->
+  <view wx:else class="recipes-list">
+    <view
+      class="recipe-card"
+      wx:for="{{recipes}}"
+      wx:key="id"
+      bindtap="goToDetail"
+      data-id="{{item.id}}"
+    >
+      <view class="recipe-main">
+        <view class="recipe-name">{{item.dish_name || '未命名菜谱'}}</view>
+        <view class="recipe-meta">
+          <text class="meta-item">🍽 {{item.servings}}人份</text>
+          <text class="meta-item">{{item.created_at}}</text>
+        </view>
+      </view>
+      <view class="recipe-actions" catchtap>
+        <view class="action-btn edit" bindtap="goToEdit" data-id="{{item.id}}">
+          <text>编辑</text>
+        </view>
+        <view class="action-btn delete" bindtap="deleteRecipe" data-id="{{item.id}}">
+          <text>删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -41,7 +41,13 @@
 
     <!-- 菜谱标题区 -->
     <view class="dish-header-card">
-      <view class="dish-name">{{recipe.dish_name || '未命名菜谱'}}</view>
+      <view class="dish-header-top">
+        <view class="dish-name">{{recipe.dish_name || '未命名菜谱'}}</view>
+        <view class="favorite-btn {{isFavorited ? 'favorited' : ''}} {{favoriteLoading ? 'loading' : ''}}" bindtap="toggleFavorite">
+          <text class="favorite-icon">{{isFavorited ? '❤️' : '🤍'}}</text>
+          <text class="favorite-text">{{isFavorited ? '已收藏' : '收藏'}}</text>
+        </view>
+      </view>
       <view class="dish-meta">
         <view class="servings-badge">
           <text class="servings-icon">🍽</text>

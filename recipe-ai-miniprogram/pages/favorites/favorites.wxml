@@ -1,0 +1,47 @@
+<view class="container favorites-container">
+  <view class="page-header">
+    <view class="back-btn" bindtap="goBack">‹ 返回</view>
+    <view class="page-title">我的收藏</view>
+    <view class="back-btn-placeholder"></view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:elif="{{favorites.length === 0}}" class="empty-state">
+    <view class="empty-icon">❤️</view>
+    <view class="empty-text">还没有收藏任何菜谱</view>
+    <view class="empty-hint">去首页发现好菜谱吧</view>
+  </view>
+
+  <!-- 收藏列表 -->
+  <view wx:else class="favorites-list">
+    <view
+      class="favorite-card"
+      wx:for="{{favorites}}"
+      wx:key="id"
+    >
+      <view class="favorite-main" bindtap="goToRecipe" data-id="{{item.recipe_id}}">
+        <view class="favorite-name">{{item.dish_name || '未命名菜谱'}}</view>
+        <view class="favorite-source" wx:if="{{item.video_title}}">
+          <text class="source-tag">📺</text>
+          <text class="source-text">{{item.video_title}}</text>
+        </view>
+        <view class="favorite-meta">
+          <text class="meta-item">👁 {{item.view_count}}</text>
+          <text class="meta-item" wx:if="{{item.favorite_count > 0}}">❤ {{item.favorite_count}}</text>
+          <text class="meta-item">{{item.created_at}}</text>
+        </view>
+      </view>
+      <view class="favorite-actions">
+        <view class="unfavorite-btn" bindtap="unfavorite" data-id="{{item.recipe_id}}">
+          <text>取消收藏</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

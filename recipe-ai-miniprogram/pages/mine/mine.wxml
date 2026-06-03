@@ -1,0 +1,55 @@
+<view class="container mine-container">
+  <!-- 顶部返回 -->
+  <view class="page-header">
+    <view class="back-btn" bindtap="goBack">‹ 返回</view>
+    <view class="page-title">我的厨房</view>
+    <view class="back-btn-placeholder"></view>
+  </view>
+
+  <!-- 用户信息卡片 -->
+  <view class="user-card">
+    <view class="user-avatar">👨‍🍳</view>
+    <view class="user-info">
+      <view class="user-name">我的厨房</view>
+      <view class="user-desc">记录美味，收藏好菜</view>
+    </view>
+  </view>
+
+  <!-- 统计数字 -->
+  <view class="stats-row">
+    <view class="stat-item">
+      <view class="stat-number">{{recipeCount}}</view>
+      <view class="stat-label">我的菜谱</view>
+    </view>
+    <view class="stat-divider"></view>
+    <view class="stat-item">
+      <view class="stat-number">{{favoriteCount}}</view>
+      <view class="stat-label">我的收藏</view>
+    </view>
+  </view>
+
+  <!-- 功能入口 -->
+  <view class="menu-section">
+    <view class="menu-title">功能菜单</view>
+
+    <view class="menu-list">
+      <view class="menu-item" bindtap="goToUserRecipes">
+        <view class="menu-icon">📝</view>
+        <view class="menu-body">
+          <view class="menu-name">我的菜谱</view>
+          <view class="menu-desc">管理自己创建的菜谱</view>
+        </view>
+        <view class="menu-arrow">›</view>
+      </view>
+
+      <view class="menu-item" bindtap="goToFavorites">
+        <view class="menu-icon">❤️</view>
+        <view class="menu-body">
+          <view class="menu-name">我的收藏</view>
+          <view class="menu-desc">查看收藏的菜谱</view>
+        </view>
+        <view class="menu-arrow">›</view>
+      </view>
+    </view>
+  </view>
+</view>

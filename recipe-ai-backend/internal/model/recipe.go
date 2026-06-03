@@ -8,14 +8,16 @@ import (
 
 // Recipe 菜谱表
 type Recipe struct {
-	ID         int64           `gorm:"primaryKey;autoIncrement" json:"id"`
-	VideoID    int64           `json:"video_id"`
-	DishName   string          `gorm:"type:varchar(255)" json:"dish_name"`
-	Servings   int             `json:"servings"`
-	RecipeJSON JSONB           `gorm:"type:jsonb" json:"recipe_json"`
-	Confidence float64         `json:"confidence"`
-	CreatedAt  time.Time       `gorm:"autoCreateTime" json:"created_at"`
-	UpdatedAt  time.Time       `gorm:"autoUpdateTime" json:"updated_at"`
+	ID            int64     `gorm:"primaryKey;autoIncrement" json:"id"`
+	VideoID       int64     `json:"video_id"`
+	DishName      string    `gorm:"type:varchar(255)" json:"dish_name"`
+	Servings      int       `json:"servings"`
+	RecipeJSON    JSONB     `gorm:"type:jsonb" json:"recipe_json"`
+	Confidence    float64   `json:"confidence"`
+	ViewCount     int       `gorm:"default:0" json:"view_count"`
+	FavoriteCount int       `gorm:"default:0" json:"favorite_count"`
+	CreatedAt     time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt     time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (Recipe) TableName() string {

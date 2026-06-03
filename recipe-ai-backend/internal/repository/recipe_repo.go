@@ -14,6 +14,10 @@ type RecipeRepository interface {
 	GetByID(ctx context.Context, id int64) (*model.Recipe, error)
 	GetByVideoID(ctx context.Context, videoID int64) (*model.Recipe, error)
 	GetByBVID(ctx context.Context, bvid string) (*model.Recipe, error)
+	IncrementViewCount(ctx context.Context, id int64) error
+	IncrementFavoriteCount(ctx context.Context, id int64) error
+	DecrementFavoriteCount(ctx context.Context, id int64) error
+	ListPopular(ctx context.Context, limit int) ([]model.Recipe, error)
 }
 
 // recipeRepository 菜谱存储实现
@@ -62,6 +66,40 @@ func (r *recipeRepository) GetByBVID(ctx context.Context, bvid string) (*model.R
 		return nil, err
 	}
 	return &recipe, nil
+}
+
+// IncrementViewCount 增加浏览量
+func (r *recipeRepository) IncrementViewCount(ctx context.Context, id int64) error {
+	return r.db.WithContext(ctx).
+		Model(&model.Recipe{}).
+		Where("id = ?", id).
+		UpdateColumn("view_count", gorm.Expr("view_count + 1")).Error
+}
+
+// IncrementFavoriteCount 增加收藏数
+func (r *recipeRepository) IncrementFavoriteCount(ctx context.Context, id int64) error {
+	return r.db.WithContext(ctx).
+		Model(&model.Recipe{}).
+		Where("id = ?", id).
+		UpdateColumn("favorite_count", gorm.Expr("favorite_count + 1")).Error
+}
+
+// DecrementFavoriteCount 减少收藏数
+func (r *recipeRepository) DecrementFavoriteCount(ctx context.Context, id int64) error {
+	return r.db.WithContext(ctx).
+		Model(&model.Recipe{}).
+		Where("id = ?", id).
+		UpdateColumn("favorite_count", gorm.Expr("GREATEST(favorite_count - 1, 0)")).Error
+}
+
+// ListPopular 获取热门菜谱
+func (r *recipeRepository) ListPopular(ctx context.Context, limit int) ([]model.Recipe, error) {
+	var recipes []model.Recipe
+	err := r.db.WithContext(ctx).
+		Order("view_count DESC, created_at DESC").
+		Limit(limit).
+		Find(&recipes).Error
+	return recipes, err
 }
 
 // ParseRecipeJSON 解析菜谱JSON

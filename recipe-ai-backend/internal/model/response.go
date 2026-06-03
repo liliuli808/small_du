@@ -68,3 +68,81 @@ type IngredientAdjustment struct {
 type RecalculateResponse struct {
 	Nutrition NutritionResultData `json:"nutrition"`
 }
+
+// PopularRecipeItem 热门菜谱项
+type PopularRecipeItem struct {
+	ID            int64   `json:"id"`
+	DishName      string  `json:"dish_name"`
+	ViewCount     int     `json:"view_count"`
+	FavoriteCount int     `json:"favorite_count"`
+	VideoTitle    string  `json:"video_title"`
+	OwnerName     string  `json:"owner_name"`
+	IsFavorited   bool    `json:"is_favorited"`
+}
+
+// PopularRecipesResponse 热门菜谱响应
+type PopularRecipesResponse struct {
+	Recipes []PopularRecipeItem `json:"recipes"`
+}
+
+// FavoriteToggleResponse 收藏切换响应
+type FavoriteToggleResponse struct {
+	IsFavorited bool `json:"is_favorited"`
+}
+
+// FavoriteItem 收藏项
+type FavoriteItem struct {
+	ID            int64   `json:"id"`
+	RecipeID      int64   `json:"recipe_id"`
+	DishName      string  `json:"dish_name"`
+	VideoTitle    string  `json:"video_title"`
+	OwnerName     string  `json:"owner_name"`
+	ViewCount     int     `json:"view_count"`
+	FavoriteCount int     `json:"favorite_count"`
+	CreatedAt     string  `json:"created_at"`
+}
+
+// FavoritesResponse 收藏列表响应
+type FavoritesResponse struct {
+	Favorites []FavoriteItem `json:"favorites"`
+}
+
+// UserRecipeListItem 用户菜谱列表项
+type UserRecipeListItem struct {
+	ID        int64  `json:"id"`
+	DishName  string `json:"dish_name"`
+	Servings  int    `json:"servings"`
+	CreatedAt string `json:"created_at"`
+}
+
+// UserRecipesResponse 用户菜谱列表响应
+type UserRecipesResponse struct {
+	Recipes []UserRecipeListItem `json:"recipes"`
+}
+
+// UserRecipeDetailResponse 用户菜谱详情响应
+type UserRecipeDetailResponse struct {
+	ID       int64          `json:"id"`
+	DishName string         `json:"dish_name"`
+	Servings int            `json:"servings"`
+	Recipe   UserRecipeData `json:"recipe"`
+	CreatedAt string        `json:"created_at"`
+}
+
+// CreateUserRecipeRequest 创建用户菜谱请求
+type CreateUserRecipeRequest struct {
+	DishName    string       `json:"dish_name" binding:"required"`
+	Servings    int          `json:"servings" binding:"required,min=1"`
+	Ingredients []Ingredient `json:"ingredients" binding:"required"`
+	Steps       []Step       `json:"steps" binding:"required"`
+	Tips        []string     `json:"tips"`
+}
+
+// UpdateUserRecipeRequest 更新用户菜谱请求
+type UpdateUserRecipeRequest struct {
+	DishName    string       `json:"dish_name" binding:"required"`
+	Servings    int          `json:"servings" binding:"required,min=1"`
+	Ingredients []Ingredient `json:"ingredients" binding:"required"`
+	Steps       []Step       `json:"steps" binding:"required"`
+	Tips        []string     `json:"tips"`
+}

@@ -1,0 +1,88 @@
+<view class="container edit-container">
+  <view class="page-header">
+    <view class="back-btn" bindtap="goBack">‹ 返回</view>
+    <view class="page-title">{{isEdit ? '编辑菜谱' : '新建菜谱'}}</view>
+    <view class="back-btn-placeholder"></view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="form-section">
+    <view class="section-label">基本信息</view>
+
+    <view class="form-group">
+      <view class="form-label">菜名 *</view>
+      <input class="form-input" placeholder="请输入菜名，如：红烧排骨" value="{{dishName}}" bindinput="onDishNameChange" />
+    </view>
+
+    <view class="form-group">
+      <view class="form-label">份量</view>
+      <picker mode="selector" range="{{servingsRange}}" value="{{servingsIndex}}" bindchange="onServingsChange">
+        <view class="form-picker">{{servings}} 人份</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 食材 -->
+  <view class="form-section">
+    <view class="section-label flex-between">
+      <text>食材清单 *</text>
+      <view class="btn btn-primary btn-xs" bindtap="addIngredient">+ 添加食材</view>
+    </view>
+
+    <view class="ingredient-list">
+      <view class="ingredient-row" wx:for="{{ingredients}}" wx:key="index">
+        <view class="ingredient-num">{{index + 1}}</view>
+        <view class="ingredient-fields">
+          <input class="form-input ingredient-name-input" placeholder="食材名称" value="{{item.name}}" data-index="{{index}}" bindinput="onIngredientNameChange" />
+          <view class="ingredient-amount-row">
+            <input class="form-input ingredient-amount-input" type="digit" placeholder="用量" value="{{item.amount !== null && item.amount !== undefined ? item.amount : ''}}" data-index="{{index}}" bindinput="onIngredientAmountChange" />
+            <picker mode="selector" range="{{unitRange}}" value="{{item.unitIndex}}" data-index="{{index}}" bindchange="onIngredientUnitChange">
+              <view class="form-picker unit-picker">{{item.unit}}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="remove-btn" bindtap="removeIngredient" data-index="{{index}}">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 步骤 -->
+  <view class="form-section">
+    <view class="section-label flex-between">
+      <text>烹饪步骤 *</text>
+      <view class="btn btn-primary btn-xs" bindtap="addStep">+ 添加步骤</view>
+    </view>
+
+    <view class="step-list">
+      <view class="step-row" wx:for="{{steps}}" wx:key="index">
+        <view class="step-num">{{index + 1}}</view>
+        <view class="step-fields">
+          <input class="form-input step-title-input" placeholder="步骤标题（可选）" value="{{item.title}}" data-index="{{index}}" bindinput="onStepTitleChange" />
+          <textarea class="form-textarea" placeholder="详细描述这个步骤..." value="{{item.description}}" data-index="{{index}}" bindinput="onStepDescChange" auto-height />
+        </view>
+        <view class="remove-btn" bindtap="removeStep" data-index="{{index}}">
+          <text>✕</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 小贴士 -->
+  <view class="form-section">
+    <view class="section-label">小贴士（可选）</view>
+    <textarea class="form-textarea tips-textarea" placeholder="每行一条小贴士..." value="{{tips}}" bindinput="onTipsChange" maxlength="500" />
+  </view>
+
+  <!-- 底部间距 -->
+  <view class="bottom-spacer"></view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <view class="btn btn-primary submit-btn {{loading ? 'loading' : ''}}" bindtap="submit">
+      <text wx:if="{{!loading}}">{{isEdit ? '保存修改' : '创建菜谱'}}</text>
+      <text wx:else>保存中...</text>
+    </view>
+  </view>
+</view>

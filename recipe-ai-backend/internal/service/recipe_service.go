@@ -96,6 +96,41 @@ func (s *RecipeService) SaveResult(ctx context.Context, videoInfo *model.VideoIn
 	return recipe.ID, nil
 }
 
+// IncrementViewCount 增加浏览量
+func (s *RecipeService) IncrementViewCount(ctx context.Context, recipeID int64) error {
+	return s.recipeRepo.IncrementViewCount(ctx, recipeID)
+}
+
+// ListPopularRecipes 获取热门菜谱
+func (s *RecipeService) ListPopularRecipes(ctx context.Context, limit int) (*model.PopularRecipesResponse, error) {
+	recipes, err := s.recipeRepo.ListPopular(ctx, limit)
+	if err != nil {
+		return nil, fmt.Errorf("获取热门菜谱失败: %w", err)
+	}
+
+	items := make([]model.PopularRecipeItem, 0, len(recipes))
+	for _, r := range recipes {
+		video, _ := s.videoRepo.GetByID(ctx, r.VideoID)
+		videoTitle := ""
+		ownerName := ""
+		if video != nil {
+			videoTitle = video.Title
+			ownerName = video.OwnerName
+		}
+
+		items = append(items, model.PopularRecipeItem{
+			ID:            r.ID,
+			DishName:      r.DishName,
+			ViewCount:     r.ViewCount,
+			FavoriteCount: r.FavoriteCount,
+			VideoTitle:    videoTitle,
+			OwnerName:     ownerName,
+		})
+	}
+
+	return &model.PopularRecipesResponse{Recipes: items}, nil
+}
+
 // GetRecipeResponse 获取完整菜谱响应
 func (s *RecipeService) GetRecipeResponse(ctx context.Context, recipeID int64) (*model.RecipeResponse, error) {
 	// 获取菜谱

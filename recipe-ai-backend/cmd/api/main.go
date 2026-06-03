@@ -72,6 +72,8 @@ func main() {
 	textSourceRepo := repository.NewTextSourceRepository(db)
 	recipeRepo := repository.NewRecipeRepository(db)
 	nutritionRepo := repository.NewNutritionRepository(db)
+	userRecipeRepo := repository.NewUserRecipeRepository(db)
+	favoriteRepo := repository.NewFavoriteRepository(db)
 
 	// 初始化Service
 	taskService := service.NewTaskService(taskRepo)
@@ -80,6 +82,8 @@ func main() {
 	aiRecipeService := service.NewAIRecipeService(aiClient)
 	nutritionService := service.NewNutritionService(nutritionRepo)
 	recipeService := service.NewRecipeService(db, recipeRepo, nutritionRepo, textSourceRepo, videoRepo)
+	userRecipeService := service.NewUserRecipeService(userRecipeRepo)
+	favoriteService := service.NewFavoriteService(favoriteRepo, recipeRepo, videoRepo)
 	analyzeService := service.NewAnalyzeService(
 		asynqClient,
 		taskService,
@@ -94,9 +98,11 @@ func main() {
 	analyzeHandler := handler.NewAnalyzeHandler(taskService, bilibiliService, analyzeService, recipeService)
 	taskHandler := handler.NewTaskHandler(taskService)
 	recipeHandler := handler.NewRecipeHandler(recipeService, nutritionService)
+	userRecipeHandler := handler.NewUserRecipeHandler(userRecipeService)
+	favoriteHandler := handler.NewFavoriteHandler(favoriteService)
 
 	// 设置路由
-	router := api.NewRouter(analyzeHandler, taskHandler, recipeHandler)
+	router := api.NewRouter(analyzeHandler, taskHandler, recipeHandler, userRecipeHandler, favoriteHandler)
 	engine := router.Setup()
 
 	// 启动HTTP服务

@@ -1,4 +1,12 @@
 <view class="container home-container">
+  <!-- 顶部导航 -->
+  <view class="top-nav">
+    <view class="top-nav-title">AI菜谱解析助手</view>
+    <view class="top-nav-mine" bindtap="goToMine">
+      <text>👤</text>
+    </view>
+  </view>
+
   <!-- 顶部装饰区域 -->
   <view class="hero-section">
     <view class="hero-icon">🍳</view>
@@ -44,6 +52,36 @@
       <text wx:if="{{!loading}}">🚀 开始解析</text>
       <text wx:else>解析中...</text>
     </button>
+  </view>
+
+  <!-- 热门推荐 -->
+  <view class="popular-section" wx:if="{{popularRecipes.length > 0}}">
+    <view class="section-header-row">
+      <view class="flex-center gap-8">
+        <text class="section-icon">🔥</text>
+        <text class="section-title">热门推荐</text>
+      </view>
+    </view>
+    <scroll-view scroll-x class="popular-scroll" enable-flex>
+      <view class="popular-list">
+        <view
+          class="popular-card"
+          wx:for="{{popularRecipes}}"
+          wx:key="id"
+          bindtap="goToRecipe"
+          data-id="{{item.id}}"
+        >
+          <view class="popular-card-name">{{item.dish_name || '未命名菜谱'}}</view>
+          <view class="popular-card-meta">
+            <text class="popular-card-views">👁 {{item.view_count}}</text>
+            <text class="popular-card-favs" wx:if="{{item.favorite_count > 0}}">❤ {{item.favorite_count}}</text>
+          </view>
+          <view class="popular-card-source" wx:if="{{item.video_title}}">
+            <text class="source-text">{{item.video_title}}</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
   </view>
 
   <!-- 示例区域 -->

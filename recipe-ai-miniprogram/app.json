@@ -3,7 +3,12 @@
     "pages/index/index",
     "pages/task/task",
     "pages/result/result",
-    "pages/edit-ingredients/edit-ingredients"
+    "pages/edit-ingredients/edit-ingredients",
+    "pages/mine/mine",
+    "pages/user-recipes/user-recipes",
+    "pages/user-recipe-edit/user-recipe-edit",
+    "pages/user-recipe-detail/user-recipe-detail",
+    "pages/favorites/favorites"
   ],
   "window": {
     "backgroundTextStyle": "light",

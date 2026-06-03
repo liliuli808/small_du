@@ -1,0 +1,84 @@
+<view class="container detail-container">
+  <view class="page-header">
+    <view class="back-btn" bindtap="goBack">‹ 返回</view>
+    <view class="page-title">菜谱详情</view>
+    <view class="header-actions">
+      <view class="header-action" bindtap="goToEdit">编辑</view>
+      <view class="header-action delete" bindtap="deleteRecipe">删除</view>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-container">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 内容 -->
+  <block wx:if="{{!loading}}">
+    <!-- 菜名 -->
+    <view class="dish-header-card">
+      <view class="dish-name">{{recipe.dish_name || '未命名菜谱'}}</view>
+      <view class="dish-meta">
+        <view class="servings-badge">
+          <text class="servings-icon">🍽</text>
+          <text>{{recipe.servings || 1}} 人份</text>
+        </view>
+        <view class="date-badge" wx:if="{{recipe.created_at}}">
+          <text>{{recipe.created_at}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 食材 -->
+    <view class="detail-section" wx:if="{{recipe.recipe && recipe.recipe.ingredients && recipe.recipe.ingredients.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">🥬</text>
+        <text class="section-title">食材清单</text>
+      </view>
+      <view class="ingredients-list">
+        <view class="ingredient-item" wx:for="{{recipe.recipe.ingredients}}" wx:key="index">
+          <text class="ingredient-name">{{item.name}}</text>
+          <text class="ingredient-amount">{{item.amount}}{{item.unit}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 步骤 -->
+    <view class="detail-section" wx:if="{{recipe.recipe && recipe.recipe.steps && recipe.recipe.steps.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">👨‍🍳</text>
+        <text class="section-title">烹饪步骤</text>
+      </view>
+      <view class="steps-list">
+        <view class="step-item" wx:for="{{recipe.recipe.steps}}" wx:key="index">
+          <view class="step-timeline">
+            <view class="step-number">{{item.order || index + 1}}</view>
+            <view wx:if="{{index < recipe.recipe.steps.length - 1}}" class="step-line"></view>
+          </view>
+          <view class="step-body">
+            <view class="step-title" wx:if="{{item.title}}">{{item.title}}</view>
+            <view class="step-desc">{{item.description}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 小贴士 -->
+    <view class="detail-section" wx:if="{{recipe.recipe && recipe.recipe.tips && recipe.recipe.tips.length > 0}}">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title">小贴士</text>
+      </view>
+      <view class="tips-list">
+        <view class="tip-item" wx:for="{{recipe.recipe.tips}}" wx:key="*this">
+          <view class="tip-bullet"></view>
+          <text class="tip-content">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 底部间距 -->
+    <view class="bottom-spacer"></view>
+  </block>
+</view>
