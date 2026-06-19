@@ -7,114 +7,169 @@
     </view>
   </view>
 
-  <!-- 顶部装饰区域 -->
-  <view class="hero-section">
-    <view class="hero-icon">🍳</view>
-    <view class="hero-title">AI菜谱解析助手</view>
-    <view class="hero-subtitle">粘贴B站视频链接，智能提取菜谱</view>
+  <!-- Tab切换栏 -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'analyze' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="analyze">
+      <text class="tab-icon">🔍</text>
+      <text class="tab-label">解析</text>
+    </view>
+    <view class="tab-item {{activeTab === 'history' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="history">
+      <text class="tab-icon">📋</text>
+      <text class="tab-label">历史</text>
+    </view>
   </view>
 
-  <!-- 输入卡片 -->
-  <view class="input-card">
-    <view class="input-label">
-      <view class="input-icon-wrapper">
-        <text class="input-icon">🔗</text>
-      </view>
-      <text class="input-label-text">B站视频链接</text>
+  <block wx:if="{{activeTab === 'analyze'}}">
+    <!-- 顶部装饰区域 -->
+    <view class="hero-section">
+      <view class="hero-icon">🍳</view>
+      <view class="hero-title">AI菜谱解析助手</view>
+      <view class="hero-subtitle">粘贴B站视频链接，智能提取菜谱</view>
     </view>
 
-    <view class="input-wrapper">
-      <textarea
-        class="url-input"
-        placeholder="请粘贴B站视频链接，如：https://www.bilibili.com/video/BVxxxx"
-        value="{{videoUrl}}"
-        bindinput="onInputChange"
-        maxlength="500"
-        auto-height
-      />
-      <view wx:if="{{videoUrl}}" class="clear-btn" bindtap="clearUrl">
-        <text>✕</text>
+    <!-- 输入卡片 -->
+    <view class="input-card">
+      <view class="input-label">
+        <view class="input-icon-wrapper">
+          <text class="input-icon">🔗</text>
+        </view>
+        <text class="input-label-text">B站视频链接</text>
       </view>
-    </view>
 
-    <view class="paste-row">
-      <view class="btn btn-secondary btn-sm paste-btn" bindtap="pasteUrl">
-        <text class="paste-icon">📋</text>
-        <text>粘贴链接</text>
-      </view>
-    </view>
-
-    <button
-      class="btn btn-primary submit-btn {{loading ? 'loading' : ''}}"
-      bindtap="submitAnalyze"
-      disabled="{{loading || !videoUrl}}"
-    >
-      <text wx:if="{{!loading}}">🚀 开始解析</text>
-      <text wx:else>解析中...</text>
-    </button>
-  </view>
-
-  <!-- 热门推荐 -->
-  <view class="popular-section" wx:if="{{popularRecipes.length > 0}}">
-    <view class="section-header-row">
-      <view class="flex-center gap-8">
-        <text class="section-icon">🔥</text>
-        <text class="section-title">热门推荐</text>
-      </view>
-    </view>
-    <scroll-view scroll-x class="popular-scroll" enable-flex>
-      <view class="popular-list">
-        <view
-          class="popular-card"
-          wx:for="{{popularRecipes}}"
-          wx:key="id"
-          bindtap="goToRecipe"
-          data-id="{{item.id}}"
-        >
-          <view class="popular-card-name">{{item.dish_name || '未命名菜谱'}}</view>
-          <view class="popular-card-meta">
-            <text class="popular-card-views">👁 {{item.view_count}}</text>
-            <text class="popular-card-favs" wx:if="{{item.favorite_count > 0}}">❤ {{item.favorite_count}}</text>
-          </view>
-          <view class="popular-card-source" wx:if="{{item.video_title}}">
-            <text class="source-text">{{item.video_title}}</text>
-          </view>
+      <view class="input-wrapper">
+        <textarea
+          class="url-input"
+          placeholder="请粘贴B站视频链接，如：https://www.bilibili.com/video/BVxxxx"
+          value="{{videoUrl}}"
+          bindinput="onInputChange"
+          maxlength="500"
+          auto-height
+        />
+        <view wx:if="{{videoUrl}}" class="clear-btn" bindtap="clearUrl">
+          <text>✕</text>
         </view>
       </view>
-    </scroll-view>
-  </view>
 
-  <!-- 示例区域 -->
-  <view class="examples-section">
-    <view class="examples-header">
-      <view class="examples-line"></view>
-      <text class="examples-title">✨ 试试这些示例</text>
-      <view class="examples-line"></view>
-    </view>
+      <view class="paste-row">
+        <view class="btn btn-secondary btn-sm paste-btn" bindtap="pasteUrl">
+          <text class="paste-icon">📋</text>
+          <text>粘贴链接</text>
+        </view>
+      </view>
 
-    <view class="example-list">
-      <view
-        class="example-card"
-        wx:for="{{exampleUrls}}"
-        wx:key="*this"
-        bindtap="fillExample"
-        data-url="{{item}}"
+      <button
+        class="btn btn-primary submit-btn {{loading ? 'loading' : ''}}"
+        bindtap="submitAnalyze"
+        disabled="{{loading || !videoUrl}}"
       >
-        <view class="example-thumb">
-          <text class="example-thumb-icon">🎬</text>
+        <text wx:if="{{!loading}}">🚀 开始解析</text>
+        <text wx:else>解析中...</text>
+      </button>
+    </view>
+
+    <!-- 热门推荐 -->
+    <view class="popular-section" wx:if="{{popularRecipes.length > 0}}">
+      <view class="section-header-row">
+        <view class="flex-center gap-8">
+          <text class="section-icon">🔥</text>
+          <text class="section-title">热门推荐</text>
         </view>
-        <view class="example-info">
-          <text class="example-name">示例菜谱视频 {{index + 1}}</text>
-          <text class="example-url">{{item}}</text>
+      </view>
+      <scroll-view scroll-x class="popular-scroll" enable-flex>
+        <view class="popular-list">
+          <view
+            class="popular-card"
+            wx:for="{{popularRecipes}}"
+            wx:key="id"
+            bindtap="goToRecipe"
+            data-id="{{item.id}}"
+          >
+            <view class="popular-card-name">{{item.dish_name || '未命名菜谱'}}</view>
+            <view class="popular-card-meta">
+              <text class="popular-card-views">👁 {{item.view_count}}</text>
+              <text class="popular-card-favs" wx:if="{{item.favorite_count > 0}}">❤ {{item.favorite_count}}</text>
+            </view>
+            <view class="popular-card-source" wx:if="{{item.video_title}}">
+              <text class="source-text">{{item.video_title}}</text>
+            </view>
+          </view>
         </view>
-        <view class="example-arrow">›</view>
+      </scroll-view>
+    </view>
+
+    <!-- 示例区域 -->
+    <view class="examples-section">
+      <view class="examples-header">
+        <view class="examples-line"></view>
+        <text class="examples-title">✨ 试试这些示例</text>
+        <view class="examples-line"></view>
+      </view>
+
+      <view class="example-list">
+        <view
+          class="example-card"
+          wx:for="{{exampleUrls}}"
+          wx:key="*this"
+          bindtap="fillExample"
+          data-url="{{item}}"
+        >
+          <view class="example-thumb">
+            <text class="example-thumb-icon">🎬</text>
+          </view>
+          <view class="example-info">
+            <text class="example-name">示例菜谱视频 {{index + 1}}</text>
+            <text class="example-url">{{item}}</text>
+          </view>
+          <view class="example-arrow">›</view>
+        </view>
       </view>
     </view>
-  </view>
 
-  <!-- 底部提示 -->
-  <view class="footer-hint">
-    <text class="footer-icon">💡</text>
-    <text class="footer-text">支持B站视频链接、b23.tv短链或直接输入BV号</text>
-  </view>
+    <!-- 底部提示 -->
+    <view class="footer-hint">
+      <text class="footer-icon">💡</text>
+      <text class="footer-text">支持B站视频链接、b23.tv短链或直接输入BV号</text>
+    </view>
+  </block>
+
+  <block wx:elif="{{activeTab === 'history'}}">
+    <!-- 历史记录 -->
+    <view class="history-section">
+      <view class="section-header-row">
+        <view class="flex-center gap-8">
+          <text class="section-icon">📋</text>
+          <text class="section-title">解析历史</text>
+        </view>
+        <view wx:if="{{historyList.length > 0}}" class="btn btn-ghost btn-xs" bindtap="clearHistory">清空</view>
+      </view>
+
+      <view wx:if="{{historyList.length === 0}}" class="history-empty">
+        <view class="history-empty-icon">📭</view>
+        <text class="history-empty-text">暂无解析历史</text>
+        <text class="history-empty-hint">解析成功后会自动保存到这里</text>
+      </view>
+
+      <view wx:else class="history-list">
+        <view
+          class="history-card"
+          wx:for="{{historyList}}"
+          wx:key="recipe_id"
+          bindtap="goToHistoryRecipe"
+          data-id="{{item.recipe_id}}"
+        >
+          <view class="history-card-body">
+            <view class="history-card-name">{{item.dish_name}}</view>
+            <view class="history-card-video" wx:if="{{item.video_title}}">{{item.video_title}}</view>
+            <view class="history-card-meta">
+              <text class="history-card-cal" wx:if="{{item.total_kcal}}">{{item.total_kcal}} kcal</text>
+              <text class="history-card-time">{{item.created_text}}</text>
+            </view>
+          </view>
+          <view class="history-card-action" bindtap="deleteHistory" data-id="{{item.recipe_id}}" catchtap>
+            <text class="history-card-delete">✕</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
 </view>

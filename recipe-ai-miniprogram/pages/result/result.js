@@ -39,6 +39,13 @@ Page({
             nutrition: res.data.nutrition || {},
             loading: false,
           })
+          // 记录到本地解析历史
+          app.addAnalyzeHistory({
+            recipe_id: recipeId,
+            dish_name: res.data.recipe?.dish_name,
+            video_title: res.data.video?.title,
+            total_kcal: res.data.nutrition?.total_kcal,
+          })
         } else {
           this.setData({
             error: res.data?.message || '获取菜谱失败',

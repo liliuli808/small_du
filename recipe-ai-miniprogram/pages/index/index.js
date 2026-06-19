@@ -2,6 +2,7 @@ const app = getApp()
 
 Page({
   data: {
+    activeTab: 'analyze',
     videoUrl: '',
     loading: false,
     exampleUrls: [
@@ -10,6 +11,7 @@ Page({
     ],
     popularRecipes: [],
     popularLoading: false,
+    historyList: [],
   },
 
   onLoad() {
@@ -19,6 +21,58 @@ Page({
   onShow() {
     // 每次显示页面时刷新热门推荐
     this.loadPopularRecipes()
+    this.loadHistory()
+  },
+
+  switchTab(e) {
+    const tab = e.currentTarget.dataset.tab
+    if (tab === this.data.activeTab) return
+    this.setData({ activeTab: tab })
+    if (tab === 'history') {
+      this.loadHistory()
+    }
+  },
+
+  loadHistory() {
+    const list = app.getAnalyzeHistory().map((it) => ({
+      ...it,
+      created_text: this.formatDate(it.created_at),
+    }))
+    this.setData({ historyList: list })
+  },
+
+  goToHistoryRecipe(e) {
+    const recipeId = e.currentTarget.dataset.id
+    wx.navigateTo({
+      url: `/pages/result/result?recipe_id=${recipeId}`,
+    })
+  },
+
+  deleteHistory(e) {
+    const recipeId = e.currentTarget.dataset.id
+    app.removeAnalyzeHistory(recipeId)
+    this.loadHistory()
+  },
+
+  clearHistory() {
+    if (this.data.historyList.length === 0) return
+    wx.showModal({
+      title: '清空历史',
+      content: '确定要清空全部解析历史吗？',
+      success: (res) => {
+        if (res.confirm) {
+          app.clearAnalyzeHistory()
+          this.loadHistory()
+        }
+      },
+    })
+  },
+
+  formatDate(ts) {
+    if (!ts) return ''
+    const d = new Date(ts)
+    const pad = (n) => n.toString().padStart(2, '0')
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
   },
 
   onInputChange(e) {
