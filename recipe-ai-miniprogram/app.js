@@ -14,8 +14,16 @@ App({
     // 重写 wx.request，自动带上用户标识
     this.wrapRequest()
 
-    // 尝试微信登录，失败则使用匿名ID
-    this.doWxLogin()
+    // 优先从本地缓存恢复 openid（同步），保证页面请求时 header 一定存在
+    const cached = wx.getStorageSync(this.loginKey)
+    if (cached) {
+      this.globalData.userOpenID = cached
+    } else {
+      this.ensureAnonymousID()
+    }
+
+    // 如果本地已有有效 openid，不再重复调用 wx.login
+    // 只有当用户点击"微信一键登录"时才主动调用
   },
 
   generateOpenID() {
@@ -44,13 +52,6 @@ App({
 
   doWxLogin() {
     return new Promise((resolve) => {
-      const cached = wx.getStorageSync(this.loginKey)
-      if (cached) {
-        this.globalData.userOpenID = cached
-        resolve(cached)
-        return
-      }
-
       wx.login({
         success: (res) => {
           if (res.code) {
@@ -66,24 +67,15 @@ App({
                   resolve(openid)
                   return
                 }
+                resolve(null)
               },
-              complete: () => {
-                // 登录接口失败时使用本地匿名ID
-                if (!this.globalData.userOpenID) {
-                  this.ensureAnonymousID()
-                }
-                resolve(this.globalData.userOpenID)
-              },
+              fail: () => resolve(null),
             })
           } else {
-            this.ensureAnonymousID()
-            resolve(this.globalData.userOpenID)
+            resolve(null)
           }
         },
-        fail: () => {
-          this.ensureAnonymousID()
-          resolve(this.globalData.userOpenID)
-        },
+        fail: () => resolve(null),
       })
     })
   },

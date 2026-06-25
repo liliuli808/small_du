@@ -17,10 +17,11 @@ Page({
 
   checkLogin() {
     const app = getApp()
-    const cached = wx.getStorageSync(app.loginKey)
+    const openid = app.globalData.userOpenID
+    const isWxLogin = !!wx.getStorageSync(app.loginKey)
     this.setData({
-      loggedIn: !!cached,
-      nickname: cached ? '已登录' : '',
+      loggedIn: isWxLogin,
+      nickname: isWxLogin ? '已登录' : '',
     })
   },
 
@@ -28,18 +29,46 @@ Page({
     if (this.data.loginLoading) return
     this.setData({ loginLoading: true })
     const app = getApp()
-    app.doWxLogin().then((openid) => {
-      this.setData({
-        loginLoading: false,
-        loggedIn: !!openid,
-        nickname: openid ? '已登录' : '',
-      })
-      if (openid) {
-        wx.showToast({ title: '登录成功', icon: 'success' })
-        this.loadStats()
-      } else {
-        wx.showToast({ title: '登录失败', icon: 'none' })
-      }
+    const oldOpenID = app.globalData.userOpenID
+
+    wx.login({
+      success: (res) => {
+        if (!res.code) {
+          this.setData({ loginLoading: false })
+          wx.showToast({ title: '登录失败', icon: 'none' })
+          return
+        }
+        wx.request({
+          url: `${app.globalData.apiBaseURL}/auth/wx-login`,
+          method: 'POST',
+          data: { code: res.code },
+          success: (r) => {
+            if (r.statusCode === 200 && r.data.openid) {
+              const openid = r.data.openid
+              wx.setStorageSync(app.loginKey, openid)
+              app.globalData.userOpenID = openid
+              this.setData({
+                loginLoading: false,
+                loggedIn: true,
+                nickname: '已登录',
+              })
+              wx.showToast({ title: '登录成功', icon: 'success' })
+              this.loadStats()
+            } else {
+              this.setData({ loginLoading: false })
+              wx.showToast({ title: '登录失败，后端不可用', icon: 'none' })
+            }
+          },
+          fail: () => {
+            this.setData({ loginLoading: false })
+            wx.showToast({ title: '网络错误，无法登录', icon: 'none' })
+          },
+        })
+      },
+      fail: () => {
+        this.setData({ loginLoading: false })
+        wx.showToast({ title: '微信登录失败', icon: 'none' })
+      },
     })
   },
 
