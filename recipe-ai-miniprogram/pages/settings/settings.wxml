@@ -3,7 +3,7 @@
     <view class="section-label">API 设置</view>
     <view class="form-group">
       <view class="form-label">API 地址</view>
-      <input class="form-input" placeholder="http://localhost:8080/api/v1" value="{{apiBaseURL}}" bindinput="onApiURLChange" />
+      <input class="form-input" placeholder="http://localhost:8081/api/v1" value="{{apiBaseURL}}" bindinput="onApiURLChange" />
       <view class="form-hint">修改后重启小程序生效</view>
     </view>
     <view class="btn btn-primary submit-btn" bindtap="saveApiURL">保存 API 地址</view>
