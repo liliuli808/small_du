@@ -15,6 +15,7 @@ type Router struct {
 	recipeHandler      *handler.RecipeHandler
 	userRecipeHandler  *handler.UserRecipeHandler
 	favoriteHandler    *handler.FavoriteHandler
+	authHandler        *handler.AuthHandler
 }
 
 // NewRouter 创建路由
@@ -24,6 +25,7 @@ func NewRouter(
 	recipeHandler *handler.RecipeHandler,
 	userRecipeHandler *handler.UserRecipeHandler,
 	favoriteHandler *handler.FavoriteHandler,
+	authHandler *handler.AuthHandler,
 ) *Router {
 	engine := gin.New()
 	engine.Use(middleware.Recover())
@@ -37,6 +39,7 @@ func NewRouter(
 		recipeHandler:     recipeHandler,
 		userRecipeHandler: userRecipeHandler,
 		favoriteHandler:   favoriteHandler,
+		authHandler:       authHandler,
 	}
 }
 
@@ -53,6 +56,9 @@ func (r *Router) Setup() *gin.Engine {
 	// 热门菜谱
 	v1.GET("/recipes/popular", r.recipeHandler.ListPopularRecipes)
 
+	// 搜索菜谱
+	v1.GET("/recipes/search", r.recipeHandler.SearchRecipes)
+
 	// 菜谱结果
 	v1.GET("/recipes/:recipe_id", r.recipeHandler.GetRecipe)
 
@@ -63,6 +69,9 @@ func (r *Router) Setup() *gin.Engine {
 	// 重新计算热量
 	v1.POST("/recipes/:recipe_id/recalculate", r.recipeHandler.Recalculate)
 
+	// AI菜谱派生（转为用户可编辑的数据）
+	v1.GET("/recipes/:recipe_id/derive", r.recipeHandler.DeriveAsUserRecipe)
+
 	// 用户菜谱
 	v1.GET("/user/recipes", r.userRecipeHandler.ListUserRecipes)
 	v1.POST("/user/recipes", r.userRecipeHandler.CreateUserRecipe)
@@ -72,6 +81,9 @@ func (r *Router) Setup() *gin.Engine {
 
 	// 用户收藏
 	v1.GET("/user/favorites", r.favoriteHandler.ListFavorites)
+
+	// 用户认证
+	v1.POST("/auth/wx-login", r.authHandler.WxLogin)
 
 	// 健康检查
 	r.engine.GET("/health", func(c *gin.Context) {

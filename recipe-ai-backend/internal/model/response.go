@@ -41,6 +41,7 @@ type VideoInfoResponse struct {
 	BVID           string `json:"bvid"`
 	Title          string `json:"title"`
 	OwnerName      string `json:"owner_name"`
+	CoverURL       string `json:"cover_url"`
 	DurationSeconds int   `json:"duration_seconds"`
 }
 

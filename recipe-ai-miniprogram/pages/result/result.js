@@ -24,6 +24,7 @@ Page({
     this.setData({ recipeId })
     this.loadRecipe(recipeId)
     this.checkFavoriteStatus(recipeId)
+    wx.showShareMenu({ withShareTicket: true })
   },
 
   loadRecipe(recipeId) {
@@ -115,6 +116,12 @@ Page({
     wx.redirectTo({ url: '/pages/index/index' })
   },
 
+  goEditRecipe() {
+    wx.navigateTo({
+      url: `/pages/user-recipe-edit/user-recipe-edit?from_recipe_id=${this.data.recipeId}`,
+    })
+  },
+
   goEditIngredients() {
     const ingredients = JSON.stringify(this.data.recipe.ingredients || [])
     const servings = this.data.recipe.servings || 1
@@ -128,6 +135,14 @@ Page({
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+  },
+
+  onShareAppMessage() {
+    const dishName = this.data.recipe.dish_name || 'AI菜谱'
+    return {
+      title: `${dishName} - AI菜谱解析助手`,
+      path: `/pages/result/result?recipe_id=${this.data.recipeId}`,
+    }
   },
 
   formatConfidence(conf) {

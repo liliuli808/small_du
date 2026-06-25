@@ -26,7 +26,53 @@ Page({
     if (options.id) {
       this.setData({ id: parseInt(options.id), isEdit: true })
       this.loadRecipe(options.id)
+    } else if (options.from_recipe_id) {
+      this.setData({ fromRecipeId: options.from_recipe_id })
+      this.loadAIDerivedRecipe(options.from_recipe_id)
     }
+  },
+
+  loadAIDerivedRecipe(recipeId) {
+    this.setData({ loading: true })
+    wx.request({
+      url: `${app.globalData.apiBaseURL}/recipes/${recipeId}/derive`,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          const data = res.data
+          const ingredients = (data.ingredients || []).map(ing => {
+            const unitIdx = UNIT_RANGE.indexOf(ing.unit)
+            return {
+              name: ing.name || '',
+              amount: ing.amount || ing.grams || null,
+              unit: ing.unit || '克',
+              unitIndex: unitIdx >= 0 ? unitIdx : 0,
+            }
+          })
+          const steps = (data.steps || []).map(step => ({
+            title: step.title || '',
+            description: step.description || '',
+          }))
+          const servingsIdx = SERVINGS_RANGE.indexOf(data.servings)
+          this.setData({
+            dishName: data.dish_name || '',
+            servings: data.servings || 2,
+            servingsIndex: servingsIdx >= 0 ? servingsIdx : 1,
+            ingredients: ingredients.length > 0 ? ingredients : [{ name: '', amount: null, unit: '克', unitIndex: 0 }],
+            steps: steps.length > 0 ? steps : [{ title: '', description: '' }],
+            tips: (data.tips || []).join('\n'),
+            loading: false,
+          })
+        } else {
+          this.setData({ loading: false })
+          wx.showToast({ title: '加载菜谱失败', icon: 'none' })
+        }
+      },
+      fail: () => {
+        this.setData({ loading: false })
+        wx.showToast({ title: '网络错误', icon: 'none' })
+      },
+    })
   },
 
   loadRecipe(id) {

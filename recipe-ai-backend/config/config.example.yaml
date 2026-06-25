@@ -2,6 +2,7 @@ app:
   name: "recipe-ai-backend"
   env: "development"
   port: 8080
+  secret_key: "dev-secret-key-change-in-production"
 
 database:
   host: "localhost"

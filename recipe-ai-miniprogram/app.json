@@ -8,7 +8,8 @@
     "pages/user-recipes/user-recipes",
     "pages/user-recipe-edit/user-recipe-edit",
     "pages/user-recipe-detail/user-recipe-detail",
-    "pages/favorites/favorites"
+    "pages/favorites/favorites",
+    "pages/settings/settings"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -51,6 +51,7 @@ func (s *RecipeService) SaveResult(ctx context.Context, videoInfo *model.VideoIn
 		Title:           videoInfo.Title,
 		Description:     videoInfo.Description,
 		OwnerName:       videoInfo.OwnerName,
+		CoverURL:        videoInfo.CoverURL,
 		DurationSeconds: videoInfo.Duration,
 	}
 
@@ -99,6 +100,34 @@ func (s *RecipeService) SaveResult(ctx context.Context, videoInfo *model.VideoIn
 // IncrementViewCount 增加浏览量
 func (s *RecipeService) IncrementViewCount(ctx context.Context, recipeID int64) error {
 	return s.recipeRepo.IncrementViewCount(ctx, recipeID)
+}
+
+// SearchRecipes 搜索菜谱
+func (s *RecipeService) SearchRecipes(ctx context.Context, keyword string, limit, offset int) (*model.PopularRecipesResponse, error) {
+	recipes, err := s.recipeRepo.Search(ctx, keyword, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("搜索菜谱失败: %w", err)
+	}
+
+	items := make([]model.PopularRecipeItem, 0, len(recipes))
+	for _, r := range recipes {
+		video, _ := s.videoRepo.GetByID(ctx, r.VideoID)
+		videoTitle := ""
+		ownerName := ""
+		if video != nil {
+			videoTitle = video.Title
+			ownerName = video.OwnerName
+		}
+		items = append(items, model.PopularRecipeItem{
+			ID:            r.ID,
+			DishName:      r.DishName,
+			ViewCount:     r.ViewCount,
+			FavoriteCount: r.FavoriteCount,
+			VideoTitle:    videoTitle,
+			OwnerName:     ownerName,
+		})
+	}
+	return &model.PopularRecipesResponse{Recipes: items}, nil
 }
 
 // ListPopularRecipes 获取热门菜谱
@@ -192,6 +221,7 @@ func (s *RecipeService) GetRecipeResponse(ctx context.Context, recipeID int64) (
 			BVID:            video.BVID,
 			Title:           video.Title,
 			OwnerName:       video.OwnerName,
+			CoverURL:        video.CoverURL,
 			DurationSeconds: video.DurationSeconds,
 		},
 		TextSources: model.TextSourcesResponse{
@@ -202,6 +232,27 @@ func (s *RecipeService) GetRecipeResponse(ctx context.Context, recipeID int64) (
 		},
 		Recipe:    *recipeData,
 		Nutrition: *nutritionData,
+	}, nil
+}
+
+// DeriveAsUserRecipeData 读取AI菜谱数据，返回供用户编辑的格式
+func (s *RecipeService) DeriveAsUserRecipeData(ctx context.Context, recipeID int64) (*model.UserRecipeData, error) {
+	recipe, err := s.recipeRepo.GetByID(ctx, recipeID)
+	if err != nil {
+		return nil, fmt.Errorf("获取菜谱失败: %w", err)
+	}
+
+	recipeData, err := repository.ParseRecipeJSON(recipe)
+	if err != nil {
+		return nil, fmt.Errorf("解析菜谱数据失败: %w", err)
+	}
+
+	return &model.UserRecipeData{
+		DishName:    recipeData.DishName,
+		Servings:    recipeData.Servings,
+		Ingredients: recipeData.Ingredients,
+		Steps:       recipeData.Steps,
+		Tips:        recipeData.Tips,
 	}, nil
 }
 

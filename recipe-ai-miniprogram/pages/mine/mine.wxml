@@ -8,11 +8,15 @@
 
   <!-- 用户信息卡片 -->
   <view class="user-card">
-    <view class="user-avatar">👨‍🍳</view>
+    <view class="user-avatar">{{loggedIn ? '👤' : '👨‍🍳'}}</view>
     <view class="user-info">
-      <view class="user-name">我的厨房</view>
-      <view class="user-desc">记录美味，收藏好菜</view>
+      <view wx:if="{{loggedIn}}" class="user-name">{{nickname || '已登录'}}</view>
+      <view wx:else class="user-name">我的厨房</view>
+      <view class="user-desc">{{loggedIn ? '记录美味，收藏好菜' : '登录后可同步收藏和菜谱数据'}}</view>
     </view>
+    <button wx:if="{{!loggedIn}}" class="login-btn" bindtap="doLogin" loading="{{loginLoading}}">
+      {{loginLoading ? '登录中...' : '微信一键登录'}}
+    </button>
   </view>
 
   <!-- 统计数字 -->
@@ -49,6 +53,29 @@
           <view class="menu-desc">查看收藏的菜谱</view>
         </view>
         <view class="menu-arrow">›</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置 -->
+  <view class="menu-section">
+    <view class="menu-title">设置</view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="goToSettings">
+        <view class="menu-icon">⚙️</view>
+        <view class="menu-body">
+          <view class="menu-name">应用设置</view>
+          <view class="menu-desc">API地址、缓存管理等</view>
+        </view>
+        <view class="menu-arrow">›</view>
+      </view>
+
+      <view class="menu-item" bindtap="clearAllCache">
+        <view class="menu-icon">🗑️</view>
+        <view class="menu-body">
+          <view class="menu-name">清除缓存</view>
+          <view class="menu-desc">清除本地数据和历史记录</view>
+        </view>
       </view>
     </view>
   </view>

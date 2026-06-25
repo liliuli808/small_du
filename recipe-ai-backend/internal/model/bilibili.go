@@ -11,6 +11,7 @@ type BilibiliVideo struct {
 	Title           string    `gorm:"column:title;type:text" json:"title"`
 	Description     string    `gorm:"column:description;type:text" json:"description"`
 	OwnerName       string    `gorm:"column:owner_name;type:varchar(255)" json:"owner_name"`
+	CoverURL        string    `gorm:"column:cover_url;type:varchar(512)" json:"cover_url"`
 	DurationSeconds int       `gorm:"column:duration_seconds" json:"duration_seconds"`
 	CreatedAt       time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt       time.Time `gorm:"autoUpdateTime" json:"updated_at"`
@@ -36,6 +37,7 @@ type VideoInfo struct {
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
 	OwnerName   string         `json:"owner_name"`
+	CoverURL    string         `json:"cover_url"`
 	Duration    int            `json:"duration"`
 	Pages       []VideoPage    `json:"pages"`
 	Subtitles   []SubtitleMeta `json:"subtitles"`

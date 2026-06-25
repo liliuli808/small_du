@@ -5,10 +5,42 @@ Page({
     recipeCount: 0,
     favoriteCount: 0,
     loading: false,
+    loggedIn: false,
+    nickname: '',
+    loginLoading: false,
   },
 
   onShow() {
+    this.checkLogin()
     this.loadStats()
+  },
+
+  checkLogin() {
+    const app = getApp()
+    const cached = wx.getStorageSync(app.loginKey)
+    this.setData({
+      loggedIn: !!cached,
+      nickname: cached ? '已登录' : '',
+    })
+  },
+
+  doLogin() {
+    if (this.data.loginLoading) return
+    this.setData({ loginLoading: true })
+    const app = getApp()
+    app.doWxLogin().then((openid) => {
+      this.setData({
+        loginLoading: false,
+        loggedIn: !!openid,
+        nickname: openid ? '已登录' : '',
+      })
+      if (openid) {
+        wx.showToast({ title: '登录成功', icon: 'success' })
+        this.loadStats()
+      } else {
+        wx.showToast({ title: '登录失败', icon: 'none' })
+      }
+    })
   },
 
   loadStats() {
@@ -67,5 +99,24 @@ Page({
 
   goBack() {
     wx.navigateBack()
+  },
+
+  goToSettings() {
+    wx.navigateTo({ url: '/pages/settings/settings' })
+  },
+
+  clearAllCache() {
+    wx.showModal({
+      title: '清除缓存',
+      content: '将清除本地历史记录和登录状态，确定继续？',
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync()
+          const app = getApp()
+          app.globalData.userOpenID = ''
+          wx.showToast({ title: '已清除', icon: 'success' })
+        }
+      },
+    })
   },
 })

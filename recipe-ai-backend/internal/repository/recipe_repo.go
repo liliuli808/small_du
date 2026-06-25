@@ -18,6 +18,7 @@ type RecipeRepository interface {
 	IncrementFavoriteCount(ctx context.Context, id int64) error
 	DecrementFavoriteCount(ctx context.Context, id int64) error
 	ListPopular(ctx context.Context, limit int) ([]model.Recipe, error)
+	Search(ctx context.Context, keyword string, limit, offset int) ([]model.Recipe, error)
 }
 
 // recipeRepository 菜谱存储实现
@@ -90,6 +91,18 @@ func (r *recipeRepository) DecrementFavoriteCount(ctx context.Context, id int64)
 		Model(&model.Recipe{}).
 		Where("id = ?", id).
 		UpdateColumn("favorite_count", gorm.Expr("GREATEST(favorite_count - 1, 0)")).Error
+}
+
+// Search 搜索菜谱
+func (r *recipeRepository) Search(ctx context.Context, keyword string, limit, offset int) ([]model.Recipe, error) {
+	var recipes []model.Recipe
+	err := r.db.WithContext(ctx).
+		Where("dish_name ILIKE ?", "%"+keyword+"%").
+		Order("view_count DESC, created_at DESC").
+		Limit(limit).
+		Offset(offset).
+		Find(&recipes).Error
+	return recipes, err
 }
 
 // ListPopular 获取热门菜谱

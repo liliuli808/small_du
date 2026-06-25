@@ -1,0 +1,35 @@
+<view class="container">
+  <view class="form-section">
+    <view class="section-label">API 设置</view>
+    <view class="form-group">
+      <view class="form-label">API 地址</view>
+      <input class="form-input" placeholder="http://localhost:8080/api/v1" value="{{apiBaseURL}}" bindinput="onApiURLChange" />
+      <view class="form-hint">修改后重启小程序生效</view>
+    </view>
+    <view class="btn btn-primary submit-btn" bindtap="saveApiURL">保存 API 地址</view>
+  </view>
+
+  <view class="form-section">
+    <view class="section-label">数据管理</view>
+    <view class="menu-list">
+      <view class="menu-item" bindtap="clearCache">
+        <view class="menu-icon">🗑️</view>
+        <view class="menu-body">
+          <view class="menu-name">清除本地缓存</view>
+          <view class="menu-desc">清除历史记录和临时数据</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="about-section">
+    <view class="about-row">
+      <text class="about-label">版本</text>
+      <text class="about-value">1.0.0</text>
+    </view>
+    <view class="about-row">
+      <text class="about-label">环境</text>
+      <text class="about-value">{{envName}}</text>
+    </view>
+  </view>
+</view>

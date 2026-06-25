@@ -20,6 +20,53 @@
   </view>
 
   <block wx:if="{{activeTab === 'analyze'}}">
+    <!-- 搜索栏 -->
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索菜谱名称..."
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="doSearch"
+        confirm-type="search"
+      />
+      <text wx:if="{{searchKeyword}}" class="search-clear" bindtap="clearSearch">✕</text>
+    </view>
+
+    <!-- 搜索结果 -->
+    <view wx:if="{{showSearchResult}}" class="search-result-section">
+      <view class="section-header-row">
+        <view class="flex-center gap-8">
+          <text class="section-icon">🔍</text>
+          <text class="section-title">搜索结果</text>
+        </view>
+        <view class="btn btn-ghost btn-xs" bindtap="clearSearch">关闭</view>
+      </view>
+      <view wx:if="{{searchLoading}}" class="search-loading">
+        <view class="loading-spinner"></view>
+      </view>
+      <view wx:elif="{{searchResult.length === 0}}" class="search-empty">未找到相关菜谱</view>
+      <view wx:else class="search-list">
+        <view
+          class="search-card"
+          wx:for="{{searchResult}}"
+          wx:key="id"
+          bindtap="goToRecipe"
+          data-id="{{item.id}}"
+        >
+          <view class="search-card-body">
+            <view class="search-card-name">{{item.dish_name}}</view>
+            <view class="search-card-meta">
+              <text class="search-card-views">👁 {{item.view_count}}</text>
+              <text class="search-card-favs" wx:if="{{item.favorite_count > 0}}">❤ {{item.favorite_count}}</text>
+            </view>
+          </view>
+          <view class="search-card-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
     <!-- 顶部装饰区域 -->
     <view class="hero-section">
       <view class="hero-icon">🍳</view>

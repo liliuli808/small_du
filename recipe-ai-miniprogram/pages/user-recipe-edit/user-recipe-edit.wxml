@@ -1,7 +1,7 @@
 <view class="container edit-container">
   <view class="page-header">
     <view class="back-btn" bindtap="goBack">‹ 返回</view>
-    <view class="page-title">{{isEdit ? '编辑菜谱' : '新建菜谱'}}</view>
+    <view class="page-title">{{isEdit ? '编辑菜谱' : fromRecipeId ? '编辑AI菜谱' : '新建菜谱'}}</view>
     <view class="back-btn-placeholder"></view>
   </view>
 

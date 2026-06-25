@@ -5,16 +5,17 @@ App({
   },
 
   onLaunch() {
-    // 获取或生成用户标识
-    let openid = wx.getStorageSync('user_openid')
-    if (!openid) {
-      openid = this.generateOpenID()
-      wx.setStorageSync('user_openid', openid)
+    // 从缓存恢复API地址
+    const savedURL = wx.getStorageSync('api_base_url')
+    if (savedURL) {
+      this.globalData.apiBaseURL = savedURL
     }
-    this.globalData.userOpenID = openid
 
     // 重写 wx.request，自动带上用户标识
     this.wrapRequest()
+
+    // 尝试微信登录，失败则使用匿名ID
+    this.doWxLogin()
   },
 
   generateOpenID() {
@@ -36,6 +37,65 @@ App({
       }
       return originalRequest(options)
     }
+  },
+
+  // ===== 微信登录 =====
+  loginKey: 'wx_login_openid',
+
+  doWxLogin() {
+    return new Promise((resolve) => {
+      const cached = wx.getStorageSync(this.loginKey)
+      if (cached) {
+        this.globalData.userOpenID = cached
+        resolve(cached)
+        return
+      }
+
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            wx.request({
+              url: `${this.globalData.apiBaseURL}/auth/wx-login`,
+              method: 'POST',
+              data: { code: res.code },
+              success: (r) => {
+                if (r.statusCode === 200 && r.data.openid) {
+                  const openid = r.data.openid
+                  wx.setStorageSync(this.loginKey, openid)
+                  this.globalData.userOpenID = openid
+                  resolve(openid)
+                  return
+                }
+              },
+              complete: () => {
+                // 登录接口失败时使用本地匿名ID
+                if (!this.globalData.userOpenID) {
+                  this.ensureAnonymousID()
+                }
+                resolve(this.globalData.userOpenID)
+              },
+            })
+          } else {
+            this.ensureAnonymousID()
+            resolve(this.globalData.userOpenID)
+          }
+        },
+        fail: () => {
+          this.ensureAnonymousID()
+          resolve(this.globalData.userOpenID)
+        },
+      })
+    })
+  },
+
+  ensureAnonymousID() {
+    if (this.globalData.userOpenID) return
+    let openid = wx.getStorageSync('user_openid')
+    if (!openid) {
+      openid = this.generateOpenID()
+      wx.setStorageSync('user_openid', openid)
+    }
+    this.globalData.userOpenID = openid
   },
 
   // ===== 解析历史（本地存储） =====

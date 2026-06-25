@@ -12,6 +12,10 @@ Page({
     popularRecipes: [],
     popularLoading: false,
     historyList: [],
+    searchKeyword: '',
+    showSearchResult: false,
+    searchLoading: false,
+    searchResult: [],
   },
 
   onLoad() {
@@ -73,6 +77,41 @@ Page({
     const d = new Date(ts)
     const pad = (n) => n.toString().padStart(2, '0')
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+  },
+
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value })
+  },
+
+  doSearch() {
+    const keyword = this.data.searchKeyword.trim()
+    if (!keyword) return
+    this.setData({ showSearchResult: true, searchLoading: true })
+    wx.request({
+      url: `${app.globalData.apiBaseURL}/recipes/search?q=${encodeURIComponent(keyword)}&limit=20`,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          this.setData({
+            searchResult: res.data.recipes || [],
+            searchLoading: false,
+          })
+        } else {
+          this.setData({ searchLoading: false })
+        }
+      },
+      fail: () => {
+        this.setData({ searchLoading: false })
+      },
+    })
+  },
+
+  clearSearch() {
+    this.setData({
+      searchKeyword: '',
+      showSearchResult: false,
+      searchResult: [],
+    })
   },
 
   onInputChange(e) {

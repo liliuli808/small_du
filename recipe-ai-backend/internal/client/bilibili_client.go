@@ -46,35 +46,36 @@ func (c *BilibiliClient) GetVideoInfo(ctx context.Context, bvid string) (*model.
 		return nil, fmt.Errorf("读取响应失败: %w", err)
 	}
 
-	var result struct {
-		Code    int    `json:"code"`
-		Message string `json:"message"`
-		Data    struct {
-			AID      int64  `json:"aid"`
-			BVID     string `json:"bvid"`
-			Title    string `json:"title"`
-			Desc     string `json:"desc"`
-			Duration int    `json:"duration"`
-			Owner    struct {
-				Name string `json:"name"`
-			} `json:"owner"`
-			Pages []struct {
-				CID      int64  `json:"cid"`
-				Page     int    `json:"page"`
-				Part     string `json:"part"`
+		var result struct {
+			Code    int    `json:"code"`
+			Message string `json:"message"`
+			Data    struct {
+				AID      int64  `json:"aid"`
+				BVID     string `json:"bvid"`
+				Title    string `json:"title"`
+				Desc     string `json:"desc"`
 				Duration int    `json:"duration"`
-			} `json:"pages"`
-			Subtitle struct {
-				List []struct {
-					ID          int64  `json:"id"`
-					Lan         string `json:"lan"`
-					LanDoc      string `json:"lan_doc"`
-					SubtitleURL string `json:"subtitle_url"`
-					AIStatus    int    `json:"ai_status"`
-				} `json:"list"`
-			} `json:"subtitle"`
-		} `json:"data"`
-	}
+				Pic      string `json:"pic"`
+				Owner    struct {
+					Name string `json:"name"`
+				} `json:"owner"`
+				Pages []struct {
+					CID      int64  `json:"cid"`
+					Page     int    `json:"page"`
+					Part     string `json:"part"`
+					Duration int    `json:"duration"`
+				} `json:"pages"`
+				Subtitle struct {
+					List []struct {
+						ID          int64  `json:"id"`
+						Lan         string `json:"lan"`
+						LanDoc      string `json:"lan_doc"`
+						SubtitleURL string `json:"subtitle_url"`
+						AIStatus    int    `json:"ai_status"`
+					} `json:"list"`
+				} `json:"subtitle"`
+			} `json:"data"`
+		}
 
 	if err := json.Unmarshal(body, &result); err != nil {
 		return nil, fmt.Errorf("解析视频信息失败: %w", err)
@@ -96,6 +97,7 @@ func (c *BilibiliClient) GetVideoInfo(ctx context.Context, bvid string) (*model.
 		Title:       result.Data.Title,
 		Description: result.Data.Desc,
 		OwnerName:   result.Data.Owner.Name,
+		CoverURL:    result.Data.Pic,
 		Duration:    result.Data.Duration,
 		Pages:       make([]model.VideoPage, 0, len(result.Data.Pages)),
 	}

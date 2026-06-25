@@ -60,6 +60,22 @@
   color: rgba(255, 255, 255, 0.8);
 }
 
+.login-btn {
+  flex-shrink: 0;
+  padding: 16rpx 28rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2rpx solid rgba(255, 255, 255, 0.4);
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1;
+}
+
+.login-btn::after {
+  border: none;
+}
+
 /* 统计 */
 .stats-row {
   display: flex;

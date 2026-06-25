@@ -19,9 +19,10 @@ type Config struct {
 
 // AppConfig 应用配置
 type AppConfig struct {
-	Name string `mapstructure:"name"`
-	Env  string `mapstructure:"env"`
-	Port int    `mapstructure:"port"`
+	Name      string `mapstructure:"name"`
+	Env       string `mapstructure:"env"`
+	Port      int    `mapstructure:"port"`
+	SecretKey string `mapstructure:"secret_key"`
 }
 
 // DatabaseConfig 数据库配置
